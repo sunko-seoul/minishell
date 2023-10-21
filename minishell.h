@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 22:11:19 by sunko             #+#    #+#             */
-/*   Updated: 2023/08/04 22:38:49 by sunko            ###   ########.fr       */
+/*   Updated: 2023/10/21 18:04:21 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ char	*get_shell_name(void);
 void	arg_error(void);
 void	print_error(void);
 void	quote_error(void);
+char	*read_cmd(void);
 
 
 

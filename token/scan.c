@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 00:05:07 by sunko             #+#    #+#             */
-/*   Updated: 2023/08/05 13:18:26 by sunko            ###   ########.fr       */
+/*   Updated: 2023/10/21 16:48:43 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ void	left_redir_scan(t_token_list *list, char *command, size_t *i);
 
 t_token	scan(char *command)
 {
-
 	t_token			*token_sample;
 	t_token_list	*token_list;
 	size_t			len;

@@ -13,7 +13,8 @@ SRCS = signal/signal.c\
 	   token/token_list.c\
 	   token/quote_scan.c\
 	   util/get_shell_name.c\
-	   ./minishell.c
+	   ./minishell.c\
+	   ./read_cmd.c
 OBJS = $(SRCS:.c=.o)
 HEADER = minishell.h
 

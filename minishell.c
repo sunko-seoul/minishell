@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 22:09:25 by sunko             #+#    #+#             */
-/*   Updated: 2023/08/05 14:40:57 by sunko            ###   ########.fr       */
+/*   Updated: 2023/10/21 18:24:29 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,30 @@ int main(int argc , char *argv[])
 	call_signal();
 	while (1)
 	{
-		command = readline("minishell> ");
+		write(1, "minishell>", 11);
+		command = read_cmd();
 		if (!command)
-			break;
+			exit(EXIT_SUCCESS);
 		else if (command[0] == 0)
-			;
-		else
+			continue;
+		else if (ft_strncmp("exit", command, 5) == 0)
 		{
-			scan(command);
-			printf("%s\n", command);
+			free(command);
+			break;
 		}
+		printf("%s\n", command);
+		// else
+		// {
+		// 	if (ft_strncmp("exit", command, 5) == 0)
+		// 	{
+		// 		free(command);
+		// 		exit(0);
+		// 	}
+		// 	scan(command);
+		// 	printf("%s\n", command);
+		// }
 		add_history(command);
 	}
+	exit(EXIT_SUCCESS);
 }
 
