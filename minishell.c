@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 22:09:25 by sunko             #+#    #+#             */
-/*   Updated: 2023/10/21 18:24:29 by sunko            ###   ########.fr       */
+/*   Updated: 2023/10/25 22:58:56 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,9 @@
 
 int main(int argc , char *argv[])
 {
-	(void)argc;
-	(void)argv;
 	char		*command;
 	t_termios	origin_attr;
+	t_source	src;
 	//t_token		*token_list;
 
 	if (argc != 1)
@@ -26,30 +25,29 @@ int main(int argc , char *argv[])
 	call_signal();
 	while (1)
 	{
-		write(1, "minishell>", 11);
-		command = read_cmd();
+		command = readline("minishell > ");
 		if (!command)
 			exit(EXIT_SUCCESS);
 		else if (command[0] == 0)
+		{
+			free(command);
 			continue;
+		}
 		else if (ft_strncmp("exit", command, 5) == 0)
 		{
 			free(command);
 			break;
 		}
 		printf("%s\n", command);
-		// else
-		// {
-		// 	if (ft_strncmp("exit", command, 5) == 0)
-		// 	{
-		// 		free(command);
-		// 		exit(0);
-		// 	}
-		// 	scan(command);
-		// 	printf("%s\n", command);
-		// }
+		init_src(command, &src);
+		parse_execute(&src);
 		add_history(command);
 	}
 	exit(EXIT_SUCCESS);
+}
+
+int	parse_execute(struct t_source *src)
+{
+
 }
 

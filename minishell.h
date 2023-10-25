@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 22:11:19 by sunko             #+#    #+#             */
-/*   Updated: 2023/10/21 18:04:21 by sunko            ###   ########.fr       */
+/*   Updated: 2023/10/25 23:18:45 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # include "terminal/terminal.h"
 # include "signal/signal.h"
 # include "token/token.h"
+# include "source.h"
 
 
 # if defined (SUNKO_PC)
@@ -46,13 +47,14 @@
 # define MAX_TOKEN			17
 
 
+
+
 char	*get_shell_name(void);
-
-
 void	arg_error(void);
 void	print_error(void);
 void	quote_error(void);
 char	*read_cmd(void);
+void	*ft_realloc(void *ptr, size_t new_size);
 
 
 
