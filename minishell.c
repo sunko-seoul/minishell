@@ -6,12 +6,20 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 22:09:25 by sunko             #+#    #+#             */
-/*   Updated: 2023/10/26 23:37:28 by sunko            ###   ########.fr       */
+/*   Updated: 2023/10/27 11:34:55 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "token/token.h"
+
+int	parse_execute(t_source *src);
+t_token_list	*tokenizer(t_source *src);
+void			token_push_back(t_token_list *list, t_token *token);
+t_token_list	*create_token_list(void);
+size_t			find_close_quote(char *str);
+t_token			*create_token(void);
+
 
 int main(int argc , char *argv[])
 {
@@ -19,6 +27,8 @@ int main(int argc , char *argv[])
 	t_termios	origin_attr;
 	t_source	src;
 	//t_token		*token_list;
+	(void)argc;
+	(void)argv;
 
 	if (argc != 1)
 		arg_error();
@@ -39,7 +49,6 @@ int main(int argc , char *argv[])
 			free(command);
 			break;
 		}
-		printf("%s\n", command);
 		init_src(command, &src);
 		parse_execute(&src);
 		add_history(command);
@@ -53,7 +62,16 @@ int	parse_execute(t_source *src)
 
 	skip_white_space(src);
 	token_list = tokenizer(src);
-
+	printf("hi\n");
+	token_list->cur = token_list->head;
+	printf("%p\n", token_list->cur);
+	while (token_list->cur != NULL)
+	{
+		printf("token->string = %s\n", token_list->cur->string);
+		printf("token->type = %d\n", token_list->cur->type);
+		token_list->cur = token_list->cur->next;
+	}
+	return 0;
 }
 
 t_token_list	*tokenizer(t_source *src)
@@ -65,10 +83,14 @@ t_token_list	*tokenizer(t_source *src)
 	int				idx;
 
 	token_list = create_token_list();
+	printf("src->buffer = %s\n", src->buffer);
+	printf("src->curpos = %d\n", src->curpos);
 	while (peek_char(src) != EOF)
 	{
 		cur = next_char(src);
+		printf("cur = %c\n", cur);
 		new_token = create_token();
+		new_token->next = NULL;
 		if (cur == '&')
 		{
 			next = peek_char(src);
@@ -89,7 +111,7 @@ t_token_list	*tokenizer(t_source *src)
 			}
 			else
 			{
-				new_token->string == "|";
+				new_token->string = "|";
 				new_token->type = PIPE;
 			}
 		}
@@ -145,10 +167,55 @@ t_token_list	*tokenizer(t_source *src)
 				new_token->type = LEFT_REDIR;
 			}
 		}
+		else if (cur == '(')
+		{
+			new_token->string = "(";
+			new_token->type = LEFT_PAREN;
+		}
+		else if (cur == ')')
+		{
+			new_token->string = ")";
+			new_token->type = RIGHT_PAREN;
+		}
+		token_push_back(token_list, new_token);
+	}
+	return token_list;
+}
 
-
+void	token_push_back(t_token_list *list, t_token *token)
+{
+	list->num_of_data += 1;
+	if (list->head == NULL)
+	{
+		list->head = token;
+		list->tail = token;
+	}
+	else
+	{
+		list->cur = list->head;
+		while (list->cur->next != NULL)
+			list->cur = list->cur->next;
+		list->cur->next = token;
+		list->tail = token;
 	}
 }
+
+t_token_list	*create_token_list(void)
+{
+	t_token_list	*new_list;
+
+	new_list = (t_token_list *)malloc(sizeof(t_token_list));
+	if (!new_list)
+		return (NULL);
+	new_list->cur = NULL;
+	new_list->head = NULL;
+	new_list->tail = NULL;
+	new_list->num_of_data = 0;
+	return (new_list);
+}
+
+
+
 
 size_t	find_close_quote(char *str)
 {

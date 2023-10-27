@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 23:34:19 by sunko             #+#    #+#             */
-/*   Updated: 2023/10/26 23:22:44 by sunko            ###   ########.fr       */
+/*   Updated: 2023/10/27 11:12:38 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ typedef enum e_token_list
 	SIGLE_QUOTE,
 	DOUBLE_QUOTE,
 	PIPE,
-	LEFR_PAREN,
+	LEFT_PAREN,
 	RIGHT_PAREN,
 	RIGHT_REDIR,
 	LEFT_REDIR,
@@ -48,21 +48,16 @@ typedef enum e_token_list
 
 typedef struct s_token
 {
-	t_token_type type;
-	char	*string;
+	t_token_type	type;
+	char			*string;
+	struct s_token	*next;
 }	t_token;
-
-typedef struct s_node
-{
-	t_token			*token;
-	struct s_node	*next;
-}	t_node;
 
 typedef struct s_token_list
 {
-	t_node	*head;
-	t_node	*tail;
-	t_node	*cur;
+	t_token	*head;
+	t_token	*tail;
+	t_token	*cur;
 	int		num_of_data;
 }	t_token_list;
 

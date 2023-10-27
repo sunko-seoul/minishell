@@ -6,13 +6,13 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 22:41:57 by sunko             #+#    #+#             */
-/*   Updated: 2023/10/25 22:56:46 by sunko            ###   ########.fr       */
+/*   Updated: 2023/10/27 11:42:36 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "source.h"
 
-void	init_src(const char *cmd, t_source *src)
+void	init_src(char *cmd, t_source *src)
 {
 	src->buffer = cmd;
 	src->bufsize = ft_strlen(cmd);
@@ -59,8 +59,9 @@ void	skip_white_space(t_source *src)
 	c = peek_char(src);
 	while (c != EOF)
 	{
-		if (c == ' ')
-			continue;
-		c = next_char(src);
+		if (peek_char(src) != ' ')
+			break;
+		else
+			c = next_char(src);
 	}
 }

@@ -3,6 +3,7 @@
 		"termios.h": "c",
 		"term.h": "c",
 		"minishell.h": "c",
-		"token.h": "c"
+		"token.h": "c",
+		"source.h": "c"
 	}
 }
