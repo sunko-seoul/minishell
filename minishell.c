@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 22:09:25 by sunko             #+#    #+#             */
-/*   Updated: 2023/10/27 11:34:55 by sunko            ###   ########.fr       */
+/*   Updated: 2023/10/27 12:07:42 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void			token_push_back(t_token_list *list, t_token *token);
 t_token_list	*create_token_list(void);
 size_t			find_close_quote(char *str);
 t_token			*create_token(void);
+size_t			find_next_space(char *str);
 
 
 int main(int argc , char *argv[])
@@ -62,9 +63,7 @@ int	parse_execute(t_source *src)
 
 	skip_white_space(src);
 	token_list = tokenizer(src);
-	printf("hi\n");
 	token_list->cur = token_list->head;
-	printf("%p\n", token_list->cur);
 	while (token_list->cur != NULL)
 	{
 		printf("token->string = %s\n", token_list->cur->string);
@@ -83,12 +82,9 @@ t_token_list	*tokenizer(t_source *src)
 	int				idx;
 
 	token_list = create_token_list();
-	printf("src->buffer = %s\n", src->buffer);
-	printf("src->curpos = %d\n", src->curpos);
 	while (peek_char(src) != EOF)
 	{
 		cur = next_char(src);
-		printf("cur = %c\n", cur);
 		new_token = create_token();
 		new_token->next = NULL;
 		if (cur == '&')
@@ -177,6 +173,19 @@ t_token_list	*tokenizer(t_source *src)
 			new_token->string = ")";
 			new_token->type = RIGHT_PAREN;
 		}
+		else
+		{
+			size_t	word_idx = 0;
+			int	word_size = 0;
+			new_token->type = WORD;
+			word_size = find_next_space(src->buffer + src->curpos);
+			new_token->string = (char *)malloc(sizeof(char) * word_size + 1);
+			new_token->string[0] = cur;
+			while (word_size--)
+				new_token->string[++word_idx] = next_char(src);
+			new_token->string[word_idx] = '\0';
+
+		}
 		token_push_back(token_list, new_token);
 	}
 	return token_list;
@@ -214,9 +223,6 @@ t_token_list	*create_token_list(void)
 	return (new_list);
 }
 
-
-
-
 size_t	find_close_quote(char *str)
 {
 	char	quote;
@@ -234,6 +240,16 @@ size_t	find_close_quote(char *str)
 			return (idx);
 	}
 	return 0;
+}
+
+size_t	find_next_space(char *str)
+{
+	size_t	idx;
+
+	idx = 0;
+	while (str[idx] != ' ' && str[idx] != 0)
+		idx++;
+	return idx;
 }
 
 
