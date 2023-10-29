@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 22:09:25 by sunko             #+#    #+#             */
-/*   Updated: 2023/10/27 12:07:42 by sunko            ###   ########.fr       */
+/*   Updated: 2023/10/29 15:14:52 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ int	parse_execute(t_source *src)
 
 	skip_white_space(src);
 	token_list = tokenizer(src);
+
+	// print debug tool
 	token_list->cur = token_list->head;
 	while (token_list->cur != NULL)
 	{
@@ -73,120 +75,185 @@ int	parse_execute(t_source *src)
 	return 0;
 }
 
+void	ampersand_token(t_token_list *list, t_source *src, char cur)
+{
+	t_token		*new_token;
+	char		next;
+
+	next = peek_char(src);
+	if (next != '&')
+	{
+		printf("not interpret ampersand\n");
+		return (NULL);
+	}
+	new_token = create_token();
+	new_token->string = "&&";
+	new_token->type = LOGICAL_END;
+	next_char(src);
+	token_push_back(list, new_token);
+}
+
+void	pipe_logical_or_token(t_token_list *list, t_source *src, char cur)
+{
+	t_token		*new_token;
+	char		next;
+
+	new_token = create_token();
+	next = peek_char(src);
+	if (next != '|')
+	{
+		new_token->string = "||";
+		new_token->type = LOGICAL_OR;
+		next_char(src);
+	}
+	else
+	{
+		new_token->string = "|";
+		new_token->type = PIPE;
+	}
+	token_push_back(list, new_token);
+}
+
+void	quotes_token(t_token_list *list, t_source *src, char cur)
+{
+	t_token	*new_token;
+	int		i;
+	int		idx;
+
+	i = 0;
+	new_token = create_token();
+	idx = find_close_quote(src->buffer + src->curpos);
+	if (!idx)
+	{
+		printf("not interpret unclosed quotes\n");
+		return ;
+	}
+	new_token->string = (char *)ft_malloc(sizeof(char) * (idx + 1));
+	new_token->string[0] = cur;
+	if (cur == '\'')
+		new_token->type = SIGLE_QUOTE;
+	else if (cur == '\"')
+		new_token->type = DOUBLE_QUOTE;
+	while (idx--)
+		new_token->string[++i] = next_char(src);
+	token_push_back(list, new_token);
+}
+
+void	asterisk_token(t_token_list *list, t_source *src, char cur)
+{
+	t_token	*new_token;
+
+	new_token = create_token();
+	new_token->string = "*";
+	new_token->type = WILDCARD;
+	token_push_back(list, new_token);
+}
+
+void	left_redirection_token(t_token *list, t_source *src, char cur)
+{
+	t_token	*new_token;
+	char	next;
+
+	new_token = create_token();
+	next = peek_char(src);
+	if (cur == '<' && next == '<')
+	{
+		new_token->string = "<<";
+		new_token->type = LEFT_APPEND;
+		next_char(src);
+	}
+	else if (cur == '<' && next != '<')
+	{
+		new_token->string = "<";
+		new_token->type = LEFT_REDIR;
+	}
+	token_push_back(list, new_token);
+}
+
+void	right_redirection_token(t_token *list, t_source *src, char cur)
+{
+	t_token	*new_token;
+	char	next;
+
+	new_token = create_token();
+	next = peek_char(src);
+	if (cur == '>' && next == '>')
+	{
+		new_token->string = ">>";
+		new_token->type = RIGHT_APPEND;
+		next_char(src);
+	}
+	else if (cur == '>' && next != '>')
+	{
+		new_token->string = ">";
+		new_token->type = RIGHT_REDIR;
+	}
+	token_push_back(list, new_token);
+}
+
+void	parentheses_token(t_token *list, t_source *src, char cur)
+{
+	t_token	*new_token;
+	char	next;
+
+	new_token = create_token();
+	if (cur == '(')
+	{
+		new_token->string = "(";
+		new_token->type = LEFT_PAREN;
+	}
+	else if (cur == ')')
+	{
+		new_token->string = ")";
+		new_token->type = RIGHT_PAREN;
+	}
+	token_push_back(list, new_token);
+}
+
+void	word_token(t_token *list, t_source *src, char cur)
+{
+	t_token	*new_token;
+	size_t	word_idx;
+	int		word_size;
+
+	new_token = create_token();
+	word_idx = 0;
+	word_size = 0;
+	new_token->type = WORD;
+	word_size = find_next_space(src->buffer + src->curpos);
+	new_token->string = (char *)malloc(sizeof(char) * word_size + 1);
+	new_token->string[0] = cur;
+	while (word_size--)
+		new_token->string[++word_idx] = next_char(src);
+	new_token->string[word_idx] = '\0';
+	token_push_back(list, new_token);
+}
+
 t_token_list	*tokenizer(t_source *src)
 {
 	t_token_list	*token_list;
-	t_token			*new_token;
 	char			cur;
-	char			next;
-	int				idx;
 
 	token_list = create_token_list();
 	while (peek_char(src) != EOF)
 	{
 		cur = next_char(src);
-		new_token = create_token();
-		new_token->next = NULL;
 		if (cur == '&')
-		{
-			next = peek_char(src);
-			if (next != '&')
-				continue ; // error?
-			new_token->string = "&&";
-			new_token->type = LOGICAL_END;
-			next_char(src);
-		}
+			ampersand_token(token_list, src, cur);
 		else if (cur == '|')
-		{
-			next = peek_char(src);
-			if (next == '|')
-			{
-				new_token->string = "||";
-				new_token->type = LOGICAL_OR;
-				next_char(src);
-			}
-			else
-			{
-				new_token->string = "|";
-				new_token->type = PIPE;
-			}
-		}
+			pipe_logical_or_token(token_list, src, cur);
 		else if (cur == '\'' || cur == '\"')
-		{
-			int i = 0;
-			idx = find_close_quote(src->buffer + src->curpos);
-			if (!idx)
-				continue; // error handler
-			new_token->string = (char *)malloc(sizeof(idx + 1));
-			if (!new_token->string)
-				continue; // error handler
-			new_token->string[0] = cur;
-			if (cur == '\'')
-				new_token->type = SIGLE_QUOTE;
-			else if (cur == '\"')
-				new_token->type = DOUBLE_QUOTE;
-			while (idx--)
-				new_token->string[++i] = next_char(src);
-		}
+			quotes_token(token_list, src, cur);
 		else if (cur == '*')
-		{
-			new_token->string = "*";
-			new_token->type = WILDCARD;
-		}
-		else if (cur == '<')
-		{
-			next = peek_char(src);
-			if (next == '<')
-			{
-				new_token->string = "<<";
-				new_token->type = RIGHT_APPEND;
-				next_char(src);
-			}
-			else
-			{
-				new_token->string = "<";
-				new_token->type = RIGHT_REDIR;
-			}
-		}
+			asterisk_token(token_list, src, cur);
 		else if (cur == '>')
-		{
-			next = peek_char(src);
-			if (next == '<')
-			{
-				new_token->string = "<<";
-				new_token->type = LEFT_APPEND;
-				next_char(src);
-			}
-			else
-			{
-				new_token->string = "<";
-				new_token->type = LEFT_REDIR;
-			}
-		}
-		else if (cur == '(')
-		{
-			new_token->string = "(";
-			new_token->type = LEFT_PAREN;
-		}
-		else if (cur == ')')
-		{
-			new_token->string = ")";
-			new_token->type = RIGHT_PAREN;
-		}
+			right_redirection_token(token_list, src, cur);
+		else if (cur == '<')
+			left_redirection_token(token_list, src, cur);
+		else if (cur == '(' || cur == ')')
+			parentheses_token(token_list, src, cur);
 		else
-		{
-			size_t	word_idx = 0;
-			int	word_size = 0;
-			new_token->type = WORD;
-			word_size = find_next_space(src->buffer + src->curpos);
-			new_token->string = (char *)malloc(sizeof(char) * word_size + 1);
-			new_token->string[0] = cur;
-			while (word_size--)
-				new_token->string[++word_idx] = next_char(src);
-			new_token->string[word_idx] = '\0';
-
-		}
-		token_push_back(token_list, new_token);
+			word_token(token_list, src, cur);
 	}
 	return token_list;
 }
@@ -260,7 +327,11 @@ t_token	*create_token(void)
 
 	new_token = (t_token *)malloc(sizeof(t_token));
 	if (!new_token)
-		return (NULL);
+	{
+		perror("malloc : ");
+		exit(EXIT_FAILURE);
+	}
+	new_token->next = NULL;
 	return new_token;
 }
 

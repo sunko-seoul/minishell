@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 22:11:19 by sunko             #+#    #+#             */
-/*   Updated: 2023/10/25 23:18:45 by sunko            ###   ########.fr       */
+/*   Updated: 2023/10/29 14:50:32 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@
 
 
 
-
+void	*ft_malloc(size_t size);
 char	*get_shell_name(void);
 void	arg_error(void);
 void	print_error(void);
