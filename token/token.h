@@ -6,27 +6,18 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 23:34:19 by sunko             #+#    #+#             */
-/*   Updated: 2023/10/27 11:12:38 by sunko            ###   ########.fr       */
+/*   Updated: 2023/10/30 10:59:20 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TOKEN_H
 # define TOKEN_H
 
+# include "source.h"
 # include "../minishell.h"
 
-# define TOKEN_NUM			18
-// # define LOGICAL_END		0
-// # define LOGICAL_OR			1
-// # define SIGLE_QUOTE		3
-// # define DOUBLE_QUOTE		4
-// # define PIPE				5
-// # define LEFR_PAREN			6
-// # define RIGHT_PAREN		7
-// # define RIGHT_REDIR		13
-// # define LEFT_REDIR			14
-// # define RIGHT_APPEND		15
-// # define LEFT_APPEND		16
+# define INIT_SRC_POS	-1
+# define ERRCHAR		0
 
 typedef enum e_token_list
 {
@@ -60,6 +51,35 @@ typedef struct s_token_list
 	t_token	*cur;
 	int		num_of_data;
 }	t_token_list;
+
+typedef struct s_source
+{
+	char	*buffer;	/* the input text */
+	int		bufsize;	/* size of the input text */
+	int		curpos;		/* absolute char postion in source */
+}	t_source;
+
+/* tokenizer.c */
+t_token_list	*tokenizer(t_token_list *token_list, t_source *src);
+void			ampersand_token(t_token_list *list, t_source *src);
+void			pipe_logical_or_token(t_token_list *list, t_source *src);
+void			quotes_token(t_token_list *list, t_source *src, char cur);
+void			asterisk_token(t_token_list *list);
+
+/* tokenizer_util.c */
+void			left_redirection_token(t_token_list *list, t_source *src, char cur);
+void			right_redirection_token(t_token_list *list, t_source *src, char cur);
+void			word_token(t_token_list *list, t_source *src, char cur);
+void			parentheses_token(t_token_list *list, char cur);
+int				ft_is_not_word(char c);
+
+/* token.c */
+t_token			*create_token(void);
+void			token_push_back(t_token_list *list, t_token *token);
+t_token_list	*create_token_list(void);
+size_t			find_close_quote(char *str);
+size_t			find_next_space(char *str);
+
 
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 22:11:19 by sunko             #+#    #+#             */
-/*   Updated: 2023/10/29 14:50:32 by sunko            ###   ########.fr       */
+/*   Updated: 2023/10/30 10:53:09 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,9 @@
 # include "libft/libft.h"
 # include "terminal/terminal.h"
 # include "signal/signal.h"
+# include "token/source.h"
 # include "token/token.h"
-# include "source.h"
+# include "util/util.h"
 
 
 # if defined (SUNKO_PC)
@@ -46,15 +47,10 @@
 # define QUOTE_ERROR_LEN	31
 # define MAX_TOKEN			17
 
-
-
-void	*ft_malloc(size_t size);
-char	*get_shell_name(void);
 void	arg_error(void);
 void	print_error(void);
 void	quote_error(void);
 char	*read_cmd(void);
-void	*ft_realloc(void *ptr, size_t new_size);
 
 
 

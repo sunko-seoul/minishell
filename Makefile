@@ -8,9 +8,13 @@ LIB = ft
 SRCS = signal/signal.c\
 	   terminal/terminal.c\
 	   error/error.c\
+	   token/source.c\
+	   token/token.c\
+	   token/tokenizer.c\
+	   token/tokenizer_util.c\
 	   util/get_shell_name.c\
-	   ./minishell.c\
-	   ./source.c
+	   util/ft_malloc.c\
+	   minishell.c
 OBJS = $(SRCS:.c=.o)
 HEADER = minishell.h
 
