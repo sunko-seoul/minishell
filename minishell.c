@@ -6,12 +6,13 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 22:09:25 by sunko             #+#    #+#             */
-/*   Updated: 2023/10/30 10:40:24 by sunko            ###   ########.fr       */
+/*   Updated: 2023/10/30 16:44:08 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "token/token.h"
+#include "parser/parser.h"
 
 int	parse_execute(t_source *src);
 void			token_push_back(t_token_list *list, t_token *token);
@@ -27,7 +28,6 @@ int main(int argc , char *argv[])
 	char		*command;
 	t_termios	origin_attr;
 	t_source	src;
-	//t_token		*token_list;
 	(void)argc;
 	(void)argv;
 
@@ -60,19 +60,23 @@ int main(int argc , char *argv[])
 int	parse_execute(t_source *src)
 {
 	t_token_list	*token_list;
-
+	t_syntax_tree	*tree;
 	skip_white_space(src);
 	token_list = create_token_list();
 	token_list = tokenizer(token_list, src);
 
+
 	// print debug tool
-	token_list->cur = token_list->head;
-	printf("\n----   type   ----   string   ----\n");
-	while (token_list->cur != NULL)
+	if (true)
 	{
-		printf("        %d    ", token_list->cur->type);
-		printf("        %s    \n", token_list->cur->string);
-		token_list->cur = token_list->cur->next;
+		token_list->cur = token_list->head;
+		printf("\n----   type   ----   string   ----\n");
+		while (token_list->cur != NULL)
+		{
+			printf("        %d    ", token_list->cur->type);
+			printf("        %s    \n", token_list->cur->string);
+			token_list->cur = token_list->cur->next;
+		}
 	}
 	return 0;
 }
