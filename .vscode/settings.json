@@ -4,6 +4,7 @@
 		"term.h": "c",
 		"minishell.h": "c",
 		"token.h": "c",
-		"source.h": "c"
+		"source.h": "c",
+		"parser.h": "c"
 	}
 }

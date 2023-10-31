@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 22:09:25 by sunko             #+#    #+#             */
-/*   Updated: 2023/10/30 16:44:08 by sunko            ###   ########.fr       */
+/*   Updated: 2023/10/30 18:22:33 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,12 @@ int main(int argc , char *argv[])
 int	parse_execute(t_source *src)
 {
 	t_token_list	*token_list;
-	t_syntax_tree	*tree;
+	//t_syntex_tree	*tree;
+
 	skip_white_space(src);
 	token_list = create_token_list();
 	token_list = tokenizer(token_list, src);
+	//tree = parser(token_list);
 
 
 	// print debug tool
@@ -80,3 +82,9 @@ int	parse_execute(t_source *src)
 	}
 	return 0;
 }
+
+// t_syntex_tree	*parser(t_token_list *token_list)
+// {
+// 	(void *)token_list;
+// 	return NULL;
+// }

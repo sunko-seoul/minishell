@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 10:29:58 by sunko             #+#    #+#             */
-/*   Updated: 2023/10/30 10:34:40 by sunko            ###   ########.fr       */
+/*   Updated: 2023/10/30 18:32:27 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	pipe_logical_or_token(t_token_list *list, t_source *src)
 
 	new_token = create_token();
 	next = peek_char(src);
-	if (next != '|')
+	if (next == '|')
 	{
 		new_token->string = "||";
 		new_token->type = LOGICAL_OR;

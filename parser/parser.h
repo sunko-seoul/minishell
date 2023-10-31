@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 11:24:19 by sunko             #+#    #+#             */
-/*   Updated: 2023/10/30 16:43:55 by sunko            ###   ########.fr       */
+/*   Updated: 2023/10/30 22:32:05 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,52 +30,60 @@ typedef struct s_assignment_word
 
 typedef struct s_redirect
 {
-	char	*redirection; // input or output
-	int		fd_num;
-	t_word	word;
+	char	*type;  // Redirection type: ">", "<", ">>", "<<" etc.
+	int		fd_name;
+	t_word	*word;
 }	t_redirect;
 
 typedef struct s_redirect_list
 {
-	t_redirect	*redirect_list;
+	t_redirect				redirection;
+	struct s_redirect_list	*next;
 }	t_redirect_list;
 
 typedef struct  s_simple_command_element
 {
-	t_word				word;
-	t_assignment_word	assignment;
-	t_redirect			redirection;
+	union
+	{
+		t_word				word;
+		t_assignment_word	assignment;
+		t_redirect			redirection;
+	};
 }	t_simple_command_element;
 
 typedef struct s_simple_command
 {
 	t_simple_command_element	*element;
+	size_t						num_elements;
 }	t_simple_command;
 
 typedef struct s_command
 {
-	t_simple_command	simple_command;
-	t_subshell			subshell;
-	t_redirect_list		redirect_list;
+	union
+	{
+		t_simple_command	simple_command;
+		t_redirect_list		redirect_list;
+	};
+	int		is_simple;	// Indicates if it's a simple command or redirection list
 }	t_command;
-
-typedef struct s_subshell
-{
-	t_list	list;
-}	t_subshell;
-
-typedef struct s_list
-{
-	char			*cur_list;
-	char			*and_or;
-	struct s_list	*next_list;
-}	t_list;
 
 typedef struct s_pipeline
 {
-	t_pipeline	pipeline;
-	t_list		list;
-	t_command	command;
+	t_command			command;
+	struct s_pipeline	*next;
+	int		is_pipeline;// Indicates if it's a pipeline
 }	t_pipeline;
 
-typedef t_list	t_syntex_tree;
+typedef struct s_m_list
+{
+	t_pipeline		pipeline;
+	char			*logical_operator; // "&&" or "||" or NULL if not applicable
+	struct s_m_list	*next;
+}	t_m_list;
+
+typedef struct s_subshell
+{
+	t_m_list	*list;
+}	t_subshell;
+
+typedef t_list t_syntex_tree;
