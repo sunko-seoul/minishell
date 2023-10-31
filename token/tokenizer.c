@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 10:29:58 by sunko             #+#    #+#             */
-/*   Updated: 2023/10/30 18:32:27 by sunko            ###   ########.fr       */
+/*   Updated: 2023/10/31 14:01:56 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ t_token_list	*tokenizer(t_token_list *token_list, t_source *src)
 		else
 			word_token(token_list, src, cur);
 	}
+	token_list->cur = token_list->head;
 	return (token_list);
 }
 
@@ -97,7 +98,7 @@ void	quotes_token(t_token_list *list, t_source *src, char cur)
 	new_token->string = (char *)ft_malloc(sizeof(char) * (idx + 1));
 	new_token->string[0] = cur;
 	if (cur == '\'')
-		new_token->type = SIGLE_QUOTE;
+		new_token->type = SINGLE_QUOTE;
 	else if (cur == '\"')
 		new_token->type = DOUBLE_QUOTE;
 	while (idx--)

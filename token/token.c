@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 10:37:26 by sunko             #+#    #+#             */
-/*   Updated: 2023/10/30 10:44:29 by sunko            ###   ########.fr       */
+/*   Updated: 2023/10/31 14:01:01 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,10 @@ void	token_push_back(t_token_list *list, t_token *token)
 	{
 		list->head = token;
 		list->tail = token;
+		list->cur = list->head;
 	}
 	else
 	{
-		list->cur = list->head;
 		while (list->cur->next != NULL)
 			list->cur = list->cur->next;
 		list->cur->next = token;

@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 22:09:25 by sunko             #+#    #+#             */
-/*   Updated: 2023/10/31 12:17:08 by sunko            ###   ########.fr       */
+/*   Updated: 2023/10/31 14:34:09 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,49 @@ int	parse_execute(t_source *src)
 			printf("        %s    \n", token_list->cur->string);
 			token_list->cur = token_list->cur->next;
 		}
+		token_list->cur = token_list->head;
 	}
 	return 0;
 }
+
+int	check_next_type(t_token_list *token_list, t_token_type type)
+{
+	if (!token_list->cur)
+		return (-1);
+	if (token_list->cur == token_list->tail)
+		return (-1);
+	if (token_list->cur->next->type = type)
+		return (1);
+	else
+		return (0);
+
+}
+
+int	check_cur_type(t_token_list *token_list, t_token_type type)
+{
+	if (!token_list->cur)
+		return (-1);
+	if (token_list->cur->type == type)
+		return (1);
+	else
+		return (0);
+}
+
+char	*push_cur_token(t_token_list *list, t_token_type type)
+{
+	char	*cur;
+
+	cur = NULL;
+	if (check_cur_type(list, type))
+	{
+		cur = list->cur->string;
+		if (list->cur != list->tail)
+			list->cur = list->cur->next;
+		return cur;
+	}
+	return NULL;
+}
+
 
 t_syntax_tree	parser(t_token_list *token_list)
 {
@@ -128,6 +168,7 @@ t_simple_command	parse_simple_cmd(t_token_list *token_list)
 	t_simple_command	simple_cmd;
 
 	simple_cmd.element = parse_simple_cmd_element(token_list, &simple_cmd.num_elements);
+	//simple_cmd.num_elements
 	return (simple_cmd);
 }
 
@@ -135,8 +176,62 @@ t_redirect_list	parse_redir_list(t_token_list *token_list)
 {
 	t_redirect_list	redir_list;
 
+	redir_list.redirection = parse_redir(token_list);
+	//redir_list.next
+
 	return (redir_list);
 }
 
+t_redirect	parse_redir(t_token_list *token_list)
+{
+	t_redirect	redir;
 
+	if (token_list->cur->type == RIGHT_APPEND \
+	|| token_list->cur->type == LEFT_APPEND \
+	|| token_list->cur->type == RIGHT_REDIR \
+	|| token_list->cur->type == LEFT_REDIR)
+		redir.type = push_cur_token(token_list, token_list->cur->type);
+	redir.fd_name = push_cur_token(token_list, WORD);
+	redir.word = parse_word(token_list);
+	return (redir);
+}
+
+t_word	*parse_word(t_token_list *token_list)
+{
+	t_word	word;
+
+	if (token_list->cur->type == WORD)
+		return (token_list->cur->type);
+}
+
+
+char	*type_to_string(t_token_type type)
+{
+	if (type == LOGICAL_END)
+		return "&&";
+	else if (type == LOGICAL_OR)
+		return "||";
+	else if (type == WILDCARD)
+		return "*";
+	else if (type == SINGLE_QUOTE)
+		return "'";
+	else if (type == DOUBLE_QUOTE)
+		return "\"";
+	else if (type == PIPE)
+		return "|";
+	else if (type == LEFT_PAREN)
+		return "(";
+	else if (type == RIGHT_PAREN)
+		return ")";
+	else if (type == RIGHT_REDIR)
+		return ">";
+	else if (type == LEFT_REDIR)
+		return "<";
+	else if (type == RIGHT_APPEND)
+		return ">>";
+	else if (type == LEFT_APPEND)
+		return "<<";
+	else if (type == DOLLAR_SIGN)
+		return "$";
+}
 

@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 11:24:19 by sunko             #+#    #+#             */
-/*   Updated: 2023/10/31 12:15:35 by sunko            ###   ########.fr       */
+/*   Updated: 2023/10/31 14:19:57 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,9 @@ typedef struct s_assignment_word
 
 typedef struct s_redirect
 {
+	int		fd_num;
 	char	*type;  // Redirection type: ">", "<", ">>", "<<" etc.
-	int		fd_name;
+	char	*fd_name;
 	t_word	*word;
 }	t_redirect;
 

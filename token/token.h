@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 23:34:19 by sunko             #+#    #+#             */
-/*   Updated: 2023/10/30 10:59:20 by sunko            ###   ########.fr       */
+/*   Updated: 2023/10/31 13:51:57 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ typedef enum e_token_list
 	LOGICAL_END,
 	LOGICAL_OR,
 	WILDCARD,
-	SIGLE_QUOTE,
+	SINGLE_QUOTE,
 	DOUBLE_QUOTE,
 	PIPE,
 	LEFT_PAREN,
