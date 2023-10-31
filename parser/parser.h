@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 11:24:19 by sunko             #+#    #+#             */
-/*   Updated: 2023/10/30 22:32:05 by sunko            ###   ########.fr       */
+/*   Updated: 2023/10/31 12:15:35 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ typedef struct  s_simple_command_element
 		t_word				word;
 		t_assignment_word	assignment;
 		t_redirect			redirection;
-	};
+	}	u_element;
 }	t_simple_command_element;
 
 typedef struct s_simple_command
@@ -63,7 +63,7 @@ typedef struct s_command
 	{
 		t_simple_command	simple_command;
 		t_redirect_list		redirect_list;
-	};
+	}	u_command;
 	int		is_simple;	// Indicates if it's a simple command or redirection list
 }	t_command;
 
@@ -71,7 +71,7 @@ typedef struct s_pipeline
 {
 	t_command			command;
 	struct s_pipeline	*next;
-	int		is_pipeline;// Indicates if it's a pipeline
+	int					is_pipeline;// Indicates if it's a pipeline
 }	t_pipeline;
 
 typedef struct s_m_list
@@ -83,7 +83,10 @@ typedef struct s_m_list
 
 typedef struct s_subshell
 {
-	t_m_list	*list;
+	t_m_list	list;
 }	t_subshell;
 
-typedef t_list t_syntex_tree;
+typedef struct s_syntax_tree
+{
+	t_m_list	list;
+}	t_syntax_tree;

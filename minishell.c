@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 22:09:25 by sunko             #+#    #+#             */
-/*   Updated: 2023/10/30 18:22:33 by sunko            ###   ########.fr       */
+/*   Updated: 2023/10/31 12:17:08 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,12 +60,12 @@ int main(int argc , char *argv[])
 int	parse_execute(t_source *src)
 {
 	t_token_list	*token_list;
-	//t_syntex_tree	*tree;
+	t_syntax_tree	tree;
 
 	skip_white_space(src);
 	token_list = create_token_list();
 	token_list = tokenizer(token_list, src);
-	//tree = parser(token_list);
+	tree = parser(token_list);
 
 
 	// print debug tool
@@ -83,8 +83,60 @@ int	parse_execute(t_source *src)
 	return 0;
 }
 
-// t_syntex_tree	*parser(t_token_list *token_list)
-// {
-// 	(void *)token_list;
-// 	return NULL;
-// }
+t_syntax_tree	parser(t_token_list *token_list)
+{
+	t_syntax_tree	tree;
+
+	tree.list = parse_list(token_list);
+	return (tree);
+}
+
+t_m_list	parse_list(t_token_list *token_list)
+{
+	t_m_list	list;
+
+	list.pipeline = parse_pipeline(token_list);
+	// list->logical_operator
+	// list->next
+	return (list);
+}
+
+t_pipeline	parse_pipeline(t_token_list *token_list)
+{
+	t_pipeline	pipe_line;
+
+	pipe_line.command = parse_command(token_list);
+	//pipe_line->next
+	//is_pipeline
+	return (pipe_line);
+}
+
+t_command	parse_command(t_token_list *token_list)
+{
+	t_command	command;
+
+	//is_siple
+	if (command.is_simple)
+		command.u_command.simple_command = parse_simple_cmd(token_list);
+	else
+		command.u_command.redirect_list = parse_redir_list(token_list);
+	return (command);
+}
+
+t_simple_command	parse_simple_cmd(t_token_list *token_list)
+{
+	t_simple_command	simple_cmd;
+
+	simple_cmd.element = parse_simple_cmd_element(token_list, &simple_cmd.num_elements);
+	return (simple_cmd);
+}
+
+t_redirect_list	parse_redir_list(t_token_list *token_list)
+{
+	t_redirect_list	redir_list;
+
+	return (redir_list);
+}
+
+
+
