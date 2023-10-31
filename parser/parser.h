@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 11:24:19 by sunko             #+#    #+#             */
-/*   Updated: 2023/10/31 14:19:57 by sunko            ###   ########.fr       */
+/*   Updated: 2023/10/31 23:10:51 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ typedef struct s_redirect
 {
 	int		fd_num;
 	char	*type;  // Redirection type: ">", "<", ">>", "<<" etc.
-	char	*fd_name;
 	t_word	*word;
 }	t_redirect;
 
@@ -91,3 +90,7 @@ typedef struct s_syntax_tree
 {
 	t_m_list	list;
 }	t_syntax_tree;
+
+void	next_sym(t_token_list *list);
+int		sym_accept(t_token_list *list, t_token_type type);
+int		sym_expect(t_token_list *list, t_token_type type);

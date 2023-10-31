@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 23:34:19 by sunko             #+#    #+#             */
-/*   Updated: 2023/10/31 13:51:57 by sunko            ###   ########.fr       */
+/*   Updated: 2023/10/31 22:58:29 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ typedef struct s_token_list
 	t_token	*head;
 	t_token	*tail;
 	t_token	*cur;
+	t_token	*before;
 	int		num_of_data;
 }	t_token_list;
 

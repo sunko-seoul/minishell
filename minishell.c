@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 22:09:25 by sunko             #+#    #+#             */
-/*   Updated: 2023/10/31 14:34:09 by sunko            ###   ########.fr       */
+/*   Updated: 2023/10/31 23:27:59 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ int	check_next_type(t_token_list *token_list, t_token_type type)
 int	check_cur_type(t_token_list *token_list, t_token_type type)
 {
 	if (!token_list->cur)
-		return (-1);
+		return (0);
 	if (token_list->cur->type == type)
 		return (1);
 	else
@@ -172,36 +172,42 @@ t_simple_command	parse_simple_cmd(t_token_list *token_list)
 	return (simple_cmd);
 }
 
-t_redirect_list	parse_redir_list(t_token_list *token_list)
+t_redirect_list	parse_redir_list(t_token_list *list)
 {
 	t_redirect_list	redir_list;
 
-	redir_list.redirection = parse_redir(token_list);
-	//redir_list.next
-
+	redir_list.redirection = parse_redir(list);
+	redir_list.next = NULL;
+	while (check_cur_type(list, RIGHT_APPEND) \
+	|| check_cur_type(list, LEFT_APPEND) \
+	|| check_cur_type(list, RIGHT_REDIR) \
+	|| check_cur_type(list, LEFT_REDIR))
+	{
+		redir_list.next = (t_redirect *)ft_malloc(sizeof(t_redirect));
+		*redir_list.next = parse_redir_list(list);
+	}
 	return (redir_list);
 }
 
-t_redirect	parse_redir(t_token_list *token_list)
+t_redirect	parse_redir(t_token_list *list)
 {
 	t_redirect	redir;
 
-	if (token_list->cur->type == RIGHT_APPEND \
-	|| token_list->cur->type == LEFT_APPEND \
-	|| token_list->cur->type == RIGHT_REDIR \
-	|| token_list->cur->type == LEFT_REDIR)
-		redir.type = push_cur_token(token_list, token_list->cur->type);
-	redir.fd_name = push_cur_token(token_list, WORD);
-	redir.word = parse_word(token_list);
+	if (sym_accept(list, RIGHT_REDIR) \
+	|| sym_accept(list, LEFT_REDIR) \
+	|| sym_accept(list, RIGHT_APPEND) \
+	|| sym_accept(list, LEFT_APPEND))
+		redir.type = list->before->string;
+	redir.word = parse_word(list);
 	return (redir);
 }
 
-t_word	*parse_word(t_token_list *token_list)
+t_word	*parse_word(t_token_list *list)
 {
 	t_word	word;
 
-	if (token_list->cur->type == WORD)
-		return (token_list->cur->type);
+	if (sym_accpet(list, WORD))
+		return (list->before->string);
 }
 
 
