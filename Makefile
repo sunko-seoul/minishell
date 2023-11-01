@@ -8,6 +8,7 @@ LIB = ft
 SRCS = signal/signal.c\
 	   terminal/terminal.c\
 	   error/error.c\
+	   parser/parser.c\
 	   token/source.c\
 	   token/token.c\
 	   token/tokenizer.c\

@@ -6,10 +6,11 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 11:24:19 by sunko             #+#    #+#             */
-/*   Updated: 2023/10/31 23:10:51 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/01 15:51:38 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../token/token.h"
 #include "../minishell.h"
 
 typedef struct s_word
@@ -32,7 +33,7 @@ typedef struct s_redirect
 {
 	int		fd_num;
 	char	*type;  // Redirection type: ">", "<", ">>", "<<" etc.
-	t_word	*word;
+	t_word	word;
 }	t_redirect;
 
 typedef struct s_redirect_list

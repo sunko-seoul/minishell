@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 22:43:45 by sunko             #+#    #+#             */
-/*   Updated: 2023/07/28 22:56:27 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/01 14:34:13 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <signal.h>
 # include "../minishell.h"
+
 
 void	call_signal(void);
 void	sigquit(int signum);

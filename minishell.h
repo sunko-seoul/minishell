@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 22:11:19 by sunko             #+#    #+#             */
-/*   Updated: 2023/10/30 10:53:09 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/01 15:50:55 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # include <curses.h>
 # include "libft/libft.h"
 # include "terminal/terminal.h"
+# include "parser/parser.h"
 # include "signal/signal.h"
 # include "token/source.h"
 # include "token/token.h"
@@ -50,8 +51,19 @@
 void	arg_error(void);
 void	print_error(void);
 void	quote_error(void);
-char	*read_cmd(void);
 
 
+int	check_next_type(t_token_list *token_list, t_token_type type);
+int	check_cur_type(t_token_list *token_list, t_token_type type);
+t_syntax_tree	parser(t_token_list *token_list);
+t_m_list	parse_list(t_token_list *list);
+t_pipeline	parse_pipeline(t_token_list *list);
+t_command	parse_command(t_token_list *list);
+t_simple_command	parse_simple_cmd(t_token_list *token_list);
+t_simple_command_element	*parse_simple_cmd_element(t_token_list *list);
+t_redirect_list	parse_redir_list(t_token_list *list);
+t_redirect	parse_redir(t_token_list *list);
+t_word	parse_word(t_token_list *list);
+char	*type_to_string(t_token_type type);
 
 #endif

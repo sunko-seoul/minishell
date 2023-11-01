@@ -6,14 +6,13 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 23:34:19 by sunko             #+#    #+#             */
-/*   Updated: 2023/10/31 22:58:29 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/01 14:32:10 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TOKEN_H
 # define TOKEN_H
 
-# include "source.h"
 # include "../minishell.h"
 
 # define INIT_SRC_POS	-1

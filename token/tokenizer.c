@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 10:29:58 by sunko             #+#    #+#             */
-/*   Updated: 2023/10/31 22:59:17 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/01 15:35:27 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ t_token_list	*tokenizer(t_token_list *token_list, t_source *src)
 			word_token(token_list, src, cur);
 	}
 	token_list->cur = token_list->head;
+	token_list->before = token_list->head;
 	return (token_list);
 }
 
