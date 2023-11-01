@@ -6,91 +6,63 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 11:24:19 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/01 15:51:38 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/01 23:29:33 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../token/token.h"
 #include "../minishell.h"
 
-typedef struct s_word
-{
-	char	*word;
-}	t_word;
-
-typedef struct s_word_list
-{
-	t_word	*word_list;
-}	t_word_list;
 
 typedef struct s_assignment_word
 {
-	t_word	left;
-	t_word	right;
+	char	*left;
+	char	*right;
 }	t_assignment_word;
 
 typedef struct s_redirect
 {
 	int		fd_num;
 	char	*type;  // Redirection type: ">", "<", ">>", "<<" etc.
-	t_word	word;
+	char	*file_name;
 }	t_redirect;
 
-typedef struct s_redirect_list
+typedef struct s_here
 {
-	t_redirect				redirection;
-	struct s_redirect_list	*next;
-}	t_redirect_list;
+	char	*type;  // "<<" etc.
+	char	*eof;
+}	t_heredoc;
 
-typedef struct  s_simple_command_element
+typedef struct s_sipme_cmd
 {
-	union
-	{
-		t_word				word;
-		t_assignment_word	assignment;
-		t_redirect			redirection;
-	}	u_element;
-}	t_simple_command_element;
+	char	*cmd;
+	char	*argv[];
+}	t_simple_cmd;
 
-typedef struct s_simple_command
+typedef struct s_cmd
 {
-	t_simple_command_element	*element;
-	size_t						num_elements;
-}	t_simple_command;
+	t_redirect		redirection;
+	t_simple_cmd	simple_cmd;
+}	t_cmd;
 
-typedef struct s_command
+typedef struct s_pipe
 {
-	union
-	{
-		t_simple_command	simple_command;
-		t_redirect_list		redirect_list;
-	}	u_command;
-	int		is_simple;	// Indicates if it's a simple command or redirection list
-}	t_command;
+	t_cmd	command;
+	struct 	s_pipe	*next;
+}	t_pipe;
 
-typedef struct s_pipeline
+typedef struct s_tree
 {
-	t_command			command;
-	struct s_pipeline	*next;
-	int					is_pipeline;// Indicates if it's a pipeline
-}	t_pipeline;
+	struct s_tree_token	*root;
+}	t_tree;
 
-typedef struct s_m_list
+typedef struct s_tree_token
 {
-	t_pipeline		pipeline;
-	char			*logical_operator; // "&&" or "||" or NULL if not applicable
-	struct s_m_list	*next;
-}	t_m_list;
-
-typedef struct s_subshell
-{
-	t_m_list	list;
-}	t_subshell;
-
-typedef struct s_syntax_tree
-{
-	t_m_list	list;
-}	t_syntax_tree;
+	t_token_type	type;
+	void			*value;
+	struct s_tree_token	*next;
+	struct s_tree_token	*child;
+}	t_tree_token;
 
 void	next_sym(t_token_list *list);
 int		sym_accept(t_token_list *list, t_token_type type);

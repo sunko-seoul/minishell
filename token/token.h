@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 23:34:19 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/01 14:32:10 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/01 23:11:06 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ typedef enum e_token_list
 typedef struct s_token
 {
 	t_token_type	type;
-	char			*string;
+	char			*value;
 	struct s_token	*next;
 }	t_token;
 
