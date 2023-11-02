@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 10:29:58 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/01 15:35:27 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/02 11:21:57 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	ampersand_token(t_token_list *list, t_source *src)
 		return ;
 	}
 	new_token = create_token();
-	new_token->string = "&&";
+	new_token->value = "&&";
 	new_token->type = LOGICAL_END;
 	next_char(src);
 	token_push_back(list, new_token);
@@ -70,13 +70,13 @@ void	pipe_logical_or_token(t_token_list *list, t_source *src)
 	next = peek_char(src);
 	if (next == '|')
 	{
-		new_token->string = "||";
+		new_token->value = "||";
 		new_token->type = LOGICAL_OR;
 		next_char(src);
 	}
 	else
 	{
-		new_token->string = "|";
+		new_token->value = "|";
 		new_token->type = PIPE;
 	}
 	token_push_back(list, new_token);
@@ -96,14 +96,14 @@ void	quotes_token(t_token_list *list, t_source *src, char cur)
 		printf("not interpret unclosed quotes\n");
 		return ;
 	}
-	new_token->string = (char *)ft_malloc(sizeof(char) * (idx + 1));
-	new_token->string[0] = cur;
+	new_token->value = (char *)ft_malloc(sizeof(char) * (idx + 1));
+	new_token->value[0] = cur;
 	if (cur == '\'')
 		new_token->type = SINGLE_QUOTE;
 	else if (cur == '\"')
 		new_token->type = DOUBLE_QUOTE;
 	while (idx--)
-		new_token->string[++i] = next_char(src);
+		new_token->value[++i] = next_char(src);
 	token_push_back(list, new_token);
 }
 
@@ -112,7 +112,7 @@ void	asterisk_token(t_token_list *list)
 	t_token	*new_token;
 
 	new_token = create_token();
-	new_token->string = "*";
+	new_token->value = "*";
 	new_token->type = WILDCARD;
 	token_push_back(list, new_token);
 }
