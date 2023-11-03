@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 22:09:25 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/03 19:42:08 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/03 23:37:58 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	parse_redir(t_token_list *list, t_tree *tree);
 int		check_next_type(t_token_list *token_list, t_token_type type);
 int		check_cur_type(t_token_list *token_list, t_token_type type);
 char	*type_to_string(t_token_type type);
+void	parse_pipe(t_token_list *list, t_tree *tree);
 
 int main(int argc , char *argv[])
 {
@@ -141,7 +142,29 @@ t_tree	*parser(t_token_list *list, t_tree *tree)
 		parse_redir(list, tree);
 	if (check_cur_type(list, WORD))
 		parse_command(list, tree);
+	if (check_cur_type(list, PIPE))
+		parse_pipe(list, tree);
 	return (tree);
+}
+
+void	parse_pipe(t_token_list *list, t_tree *tree)
+{
+	t_tree_token	*new_tok;
+
+	new_tok = (t_tree_token *)ft_malloc(sizeof(t_tree_token));
+	if (sym_accept(list, PIPE))
+	{
+		new_tok->type = list->before->type;
+		new_tok->value = list->before->value;
+		add_next(tree->last_child, new_tok);
+	}
+	while (sym_accept(list, WORD))
+	{
+		new_tok = (t_tree_token *)ft_malloc(sizeof(t_tree_token));
+		new_tok->type = list->before->type;
+		new_tok->value = list->before->value;
+		add_next(tree->last_child, new_tok);
+	}
 }
 
 void	parse_command(t_token_list *list, t_tree *tree)
