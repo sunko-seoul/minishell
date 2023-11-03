@@ -6,20 +6,20 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 22:09:25 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/02 23:32:38 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/03 13:38:15 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	parse_execute(t_source *src);
-void			token_push_back(t_token_list *list, t_token *token);
-t_token_list	*create_token_list(void);
-size_t			find_close_quote(char *str);
-t_token			*create_token(void);
-size_t			find_next_space(char *str);
-int	ft_is_not_word(char c);
-
+void	add_child(t_tree *tree, t_tree_token *new_tok);
+void	add_next(t_tree_token *child_tok, t_tree_token *new_tok);
+t_tree	*parser(t_token_list *list, t_tree *tree);
+void	parse_command(t_token_list *list, t_tree *tree);
+void	parse_redir(t_token_list *list, t_tree *tree);
+int		check_next_type(t_token_list *token_list, t_token_type type);
+int		check_cur_type(t_token_list *token_list, t_token_type type);
+char	*type_to_string(t_token_type type);
 
 int main(int argc , char *argv[])
 {
@@ -85,16 +85,26 @@ int	parse_execute(t_source *src)
 	tree = (t_tree *)ft_malloc(sizeof(t_tree));
 	tree->root = NULL;
 	tree->first_child = NULL;
-	tree->before_child = NULL;
-	tree->cur_child = NULL;
-	parser(token_list, tree);
+	tree->last_child = NULL;
+	tree = parser(token_list, tree);
+	tree->cur = tree->first_child;
+	t_tree_token	*cur_child;
+	cur_child = tree->first_child;
+	while (cur_child)
+	{
+		tree->cur = cur_child;
+		while (tree->cur)
+		{
+			printf("%s\n", tree->cur->value);
+			tree->cur = tree->cur->next;
+		}
+		cur_child = cur_child->child;
+	}
 	return 0;
 }
 
-void	add_child(t_token_list *list, t_tree *tree, t_tree_token *new_tok)
+void	add_child(t_tree *tree, t_tree_token *new_tok)
 {
-	t_tree_token	*cur_tok;
-
 	new_tok->next = NULL;
 	new_tok->child = NULL;
 	if (!tree->root)
@@ -108,7 +118,7 @@ void	add_child(t_token_list *list, t_tree *tree, t_tree_token *new_tok)
 	tree->last_child = new_tok;
 }
 
-void	add_next(t_token_list *list, t_tree_token *child_tok, t_tree_token *new_tok)
+void	add_next(t_tree_token *child_tok, t_tree_token *new_tok)
 {
 	t_tree_token	*cur_tok;
 
@@ -128,17 +138,38 @@ t_tree	*parser(t_token_list *list, t_tree *tree)
 	|| check_cur_type(list, LEFT_REDIR) \
 	|| check_cur_type(list, RIGHT_APPEND) \
 	|| check_cur_type(list, LEFT_APPEND))
-	{
 		parse_redir(list, tree);
+	else if (check_cur_type(list, WORD))
+		parse_command(list, tree);
+	return (tree);
+}
+
+void	parse_command(t_token_list *list, t_tree *tree)
+{
+	t_tree_token	*new_tok;
+
+	new_tok = (t_tree_token *)ft_malloc(sizeof(t_tree_token));
+	if (sym_accept(list, WORD))
+	{
+		new_tok->type = list->before->type;
+		new_tok->value = list->before->value;
+		add_child(tree, new_tok);
+	}
+	while (sym_accept(list, WORD))
+	{
+		new_tok = (t_tree_token *)ft_malloc(sizeof(t_tree_token));
+		new_tok->type = list->before->type;
+		new_tok->value = list->before->value;
+		add_next(tree->last_child, new_tok);
 	}
 }
 
 void	parse_redir(t_token_list *list, t_tree *tree)
 {
 	t_tree_token	*new_tok;
+	char			*err;
 
 	new_tok = (t_tree_token *)ft_malloc(sizeof(t_tree_token));
-
 	if (sym_accept(list, RIGHT_REDIR) \
 	|| sym_accept(list, LEFT_REDIR) \
 	|| sym_accept(list, RIGHT_APPEND) \
@@ -146,20 +177,26 @@ void	parse_redir(t_token_list *list, t_tree *tree)
 	{
 		new_tok->type = list->before->type;
 		new_tok->value = list->before->value;
-		add_child(list, tree, new_tok);
+		add_child(tree, new_tok);
 	}
 	if (sym_accept(list, WORD))
 	{
 		new_tok = (t_tree_token *)ft_malloc(sizeof(t_tree_token));
 		new_tok->type = list->before->type;
 		new_tok->value = list->before->value;
-		add_next(list, tree->last_child, new_tok);
+		printf("new_tok->value = %s\n", new_tok->value);
+		add_next(tree->last_child, new_tok);
 	}
 	else
+	{
+		err = type_to_string(list->cur->type);
+		write(2, "bash: syntax error near unexpected token `", 43);
+		write(2, err, ft_strlen(err));
+		write(2, "\'\n", 2);
+		exit(EXIT_FAILURE);
 		return ; //syntax error
+	}
 }
-
-
 
 int	check_next_type(t_token_list *token_list, t_token_type type)
 {

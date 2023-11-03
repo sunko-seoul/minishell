@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 11:24:19 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/02 23:30:09 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/03 13:31:48 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ typedef struct s_tree
 	struct s_tree_token	*root;
 	struct s_tree_token	*first_child;
 	struct s_tree_token *last_child;
+	struct s_tree_token *cur;
 }	t_tree;
 
 typedef struct s_tree_token
