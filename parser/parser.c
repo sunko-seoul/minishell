@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 16:32:04 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/03 13:43:12 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/03 19:49:25 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,16 @@ void	next_sym(t_token_list *list)
 		list->cur = list->cur->next;
 	}
 	else
+	{
 		list->before = list->cur;
+		list->cur = NULL;
+	}
 }
 
 int	sym_accept(t_token_list *list, t_token_type type)
 {
+	if (!list->cur)
+		return (0);
 	if (list->cur->type == type)
 	{
 		next_sym(list);

@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 23:34:19 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/01 23:11:06 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/03 19:48:01 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,6 @@ void			token_push_back(t_token_list *list, t_token *token);
 t_token_list	*create_token_list(void);
 size_t			find_close_quote(char *str);
 size_t			find_next_space(char *str);
-
-
 
 #endif
 

@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 22:09:25 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/03 13:38:15 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/03 19:42:08 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,7 @@ t_tree	*parser(t_token_list *list, t_tree *tree)
 	|| check_cur_type(list, RIGHT_APPEND) \
 	|| check_cur_type(list, LEFT_APPEND))
 		parse_redir(list, tree);
-	else if (check_cur_type(list, WORD))
+	if (check_cur_type(list, WORD))
 		parse_command(list, tree);
 	return (tree);
 }
