@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 10:29:58 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/02 11:21:57 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/04 13:57:42 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ void	quotes_token(t_token_list *list, t_source *src, char cur)
 	if (!idx)
 	{
 		printf("not interpret unclosed quotes\n");
+		exit(EXIT_FAILURE);
 		return ;
 	}
 	new_token->value = (char *)ft_malloc(sizeof(char) * (idx + 1));

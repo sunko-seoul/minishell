@@ -9,12 +9,14 @@ SRCS = signal/signal.c\
 	   terminal/terminal.c\
 	   error/error.c\
 	   parser/parser.c\
+	   parser/parser_token.c\
 	   token/source.c\
 	   token/token.c\
 	   token/tokenizer.c\
 	   token/tokenizer_util.c\
 	   util/get_shell_name.c\
 	   util/ft_malloc.c\
+	   debug_tool.c\
 	   minishell.c
 OBJS = $(SRCS:.c=.o)
 HEADER = minishell.h

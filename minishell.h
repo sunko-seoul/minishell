@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 22:11:19 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/03 13:38:17 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/04 14:36:41 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,5 +59,7 @@ char	*type_to_string(t_token_type type);
 
 
 int		parse_execute(t_source *src);
+void	token_debug(t_token_list *token_list);
+void	tree_debug(t_tree *tree);
 
 #endif

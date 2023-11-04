@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 11:24:19 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/03 13:31:48 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/04 14:31:08 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,18 @@ typedef struct s_tree_token
 	struct s_tree_token	*child;
 }	t_tree_token;
 
+
+/* parser.c */
 void	next_sym(t_token_list *list);
 int		sym_accept(t_token_list *list, t_token_type type);
 int		sym_expect(t_token_list *list, t_token_type type);
+void	add_child(t_tree *tree, t_tree_token *new_tok);
+void	add_next(t_tree_token *child_tok, t_tree_token *new_tok);
+
+/* parser_token.c */
+void	parse_pipe(t_token_list *list, t_tree *tree);
+void	parse_logical(t_token_list *list, t_tree *tree);
+void	parse_quote(t_token_list *list, t_tree *tree);
+void	parse_paren(t_token_list *list, t_tree *tree);
+void	parse_command(t_token_list *list, t_tree *tree);
+void	parse_redir(t_token_list *list, t_tree *tree);
