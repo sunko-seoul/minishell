@@ -5,6 +5,7 @@
 		"minishell.h": "c",
 		"token.h": "c",
 		"source.h": "c",
-		"parser.h": "c"
+		"parser.h": "c",
+		"executor.h": "c"
 	}
 }

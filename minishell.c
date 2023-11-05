@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 22:09:25 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/04 14:37:22 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/05 14:01:18 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int		check_cur_type(t_token_list *token_list, t_token_type type);
 char	*type_to_string(t_token_type type);
 
 
-int main(int argc , char *argv[])
+int main(int argc , char *argv[], char *envp[])
 {
 	char		*command;
 	t_termios	origin_attr;
@@ -46,18 +46,33 @@ int main(int argc , char *argv[])
 			break;
 		}
 		init_src(command, &src);
-		parse_execute(&src);
+		parse_execute(&src, envp);
 		add_history(command);
 	}
 	exit(EXIT_SUCCESS);
 }
 
-void	print_hello(void)
+char	**split_path(void)
 {
-	return ;
+	char	*path;
+	char	**rst;
+
+	path = getenv("PATH");
+	if (!path)
+	{
+		printf("goto set path\n");
+		exit(1);
+	}
+	rst = ft_split(path, ':');
+	if (!rst)
+	{
+		printf("malloc error\n");
+		exit(1);
+	}
+	return (rst);
 }
 
-int	parse_execute(t_source *src)
+int	parse_execute(t_source *src, char *envp[])
 {
 	t_token_list	*token_list;
 	t_tree			*tree;
@@ -73,9 +88,9 @@ int	parse_execute(t_source *src)
 	tree->first_child = NULL;
 	tree->last_child = NULL;
 	tree = parser(token_list, tree);
-
 	/* tree debug */
 	tree_debug(tree);
+	executor(tree, envp);
 	return 0;
 }
 
