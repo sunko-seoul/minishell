@@ -6,11 +6,31 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/05 14:00:14 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/05 14:01:14 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/05 21:53:11 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
+
+char	**split_path(void)
+{
+	char	*path;
+	char	**rst;
+
+	path = getenv("PATH");
+	if (!path)
+	{
+		printf("goto set path\n");
+		exit(1);
+	}
+	rst = ft_split(path, ':');
+	if (!rst)
+	{
+		printf("malloc error\n");
+		exit(1);
+	}
+	return (rst);
+}
 
 void	executor(t_tree *tree, char *envp[])
 {

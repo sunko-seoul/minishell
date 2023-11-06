@@ -1,26 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor.h                                         :+:      :+:    :+:   */
+/*   pipeline.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/05 13:59:25 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/06 16:06:45 by sunko            ###   ########.fr       */
+/*   Created: 2023/11/06 16:02:08 by sunko             #+#    #+#             */
+/*   Updated: 2023/11/06 16:11:06 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXECUTOR_H
-# define EXECUTOR_H
+#ifndef PIPELINE_H
+# define PIPELINE_H
 
-# include "../minishell.h"
+#include "../minishell.h"
 
-char	*join_binpath_cmd(char *path[], char *cmd);
-void	executor(t_tree *tree, char *envp[]);
-
-typedef struct s_cmd_info
+typedef struct s_pipe_info
 {
-
-}	t_cmd_info;
+	int	**pipe_fd;
+	int	pipe_cnt;
+}	t_pipe_info;
 
 #endif

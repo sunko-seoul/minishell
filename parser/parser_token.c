@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/04 14:29:35 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/04 14:30:26 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/06 15:45:49 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,17 +98,17 @@ void	parse_pipe(t_token_list *list, t_tree *tree)
 	{
 		new_tok->type = list->before->type;
 		new_tok->value = list->before->value;
-		add_next(tree->last_child, new_tok);
+		add_child(tree, new_tok);
 	}
-	while (sym_accept(list, WORD) \
-	|| sym_accept(list, SINGLE_QUOTE) \
-	|| sym_accept(list, DOUBLE_QUOTE))
-	{
-		new_tok = (t_tree_token *)ft_malloc(sizeof(t_tree_token));
-		new_tok->type = list->before->type;
-		new_tok->value = list->before->value;
-		add_next(tree->last_child, new_tok);
-	}
+	// while (sym_accept(list, WORD) \
+	// || sym_accept(list, SINGLE_QUOTE) \
+	// || sym_accept(list, DOUBLE_QUOTE))
+	// {
+	// 	new_tok = (t_tree_token *)ft_malloc(sizeof(t_tree_token));
+	// 	new_tok->type = list->before->type;
+	// 	new_tok->value = list->before->value;
+	// 	add_next(tree->last_child, new_tok);
+	// }
 }
 
 void	parse_command(t_token_list *list, t_tree *tree)
@@ -159,11 +159,7 @@ void	parse_redir(t_token_list *list, t_tree *tree)
 	}
 	else
 	{
-		err = type_to_string(list->cur->type);
-		write(2, "bash: syntax error near unexpected token `", 43);
-		write(2, err, ft_strlen(err));
-		write(2, "\'\n", 2);
-		exit(EXIT_FAILURE);
+		syntax_error(list->cur->type);
 		return ; //syntax error
 	}
 }

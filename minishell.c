@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 22:09:25 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/05 14:01:18 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/06 16:08:05 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ t_tree	*parser(t_token_list *list, t_tree *tree);
 int		check_next_type(t_token_list *token_list, t_token_type type);
 int		check_cur_type(t_token_list *token_list, t_token_type type);
 char	*type_to_string(t_token_type type);
+void	syntax_error(t_token_type type);
 
 
 int main(int argc , char *argv[], char *envp[])
@@ -52,30 +53,14 @@ int main(int argc , char *argv[], char *envp[])
 	exit(EXIT_SUCCESS);
 }
 
-char	**split_path(void)
-{
-	char	*path;
-	char	**rst;
-
-	path = getenv("PATH");
-	if (!path)
-	{
-		printf("goto set path\n");
-		exit(1);
-	}
-	rst = ft_split(path, ':');
-	if (!rst)
-	{
-		printf("malloc error\n");
-		exit(1);
-	}
-	return (rst);
-}
 
 int	parse_execute(t_source *src, char *envp[])
 {
 	t_token_list	*token_list;
 	t_tree			*tree;
+	pid_t			pid;
+	t_pipe_info		info;
+	int				status;
 
 	skip_white_space(src);
 	token_list = create_token_list();
@@ -90,7 +75,20 @@ int	parse_execute(t_source *src, char *envp[])
 	tree = parser(token_list, tree);
 	/* tree debug */
 	tree_debug(tree);
-	executor(tree, envp);
+
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
+		exit(EXIT_FAILURE);
+	}
+	if (pid == 0)
+	{
+		pipe_child(tree);
+		executor(tree, envp);
+	}
+	else
+		waitpid(0, &status, 0);
 	return 0;
 }
 
@@ -168,5 +166,16 @@ char	*type_to_string(t_token_type type)
 	else if (type == DOLLAR_SIGN)
 		return "$";
 	return NULL;
+}
+
+void	syntax_error(t_token_type type)
+{
+	char	*err;
+
+	err = type_to_string(type);
+	write(2, "bash: syntax error near unexpected token `", 43);
+	write(2, err, ft_strlen(err));
+	write(2, "\'\n", 2);
+	exit(EXIT_FAILURE);
 }
 

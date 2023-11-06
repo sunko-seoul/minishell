@@ -1,6 +1,6 @@
 NAME = minishell
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g
+#CFLAGS = -Wall -Wextra -Werror -g
 READLINE_FLAG = -lreadline -L${HOME}/.brew/opt/readline/lib -I${HOME}/.brew/opt/readline/include/readline
 LIBFT_FLAG = -L$(LIB_PATH) -l$(LIB)
 LIB_PATH = libft
@@ -8,6 +8,7 @@ LIB = ft
 SRCS = signal/signal.c\
 	   terminal/terminal.c\
 	   error/error.c\
+	   executor/executor.c\
 	   parser/parser.c\
 	   parser/parser_token.c\
 	   token/source.c\

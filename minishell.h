@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 22:11:19 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/05 13:43:35 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/06 16:05:41 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@
 # include "token/source.h"
 # include "token/token.h"
 # include "util/util.h"
+# include "executor/executor.h"
+# include "executor/pipeline.h"
 
 
 # if defined (SUNKO_PC)
@@ -61,5 +63,6 @@ char	*type_to_string(t_token_type type);
 int		parse_execute(t_source *src, char *envp[]);
 void	token_debug(t_token_list *token_list);
 void	tree_debug(t_tree *tree);
+void	syntax_error(t_token_type type);
 
 #endif

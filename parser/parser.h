@@ -6,12 +6,15 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 11:24:19 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/04 14:31:08 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/06 16:07:17 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../token/token.h"
-#include "../minishell.h"
+#ifndef PARSER_H
+# define PARSER_H
+
+# include "../token/token.h"
+# include "../minishell.h"
 
 
 typedef struct s_tree
@@ -45,3 +48,7 @@ void	parse_quote(t_token_list *list, t_tree *tree);
 void	parse_paren(t_token_list *list, t_tree *tree);
 void	parse_command(t_token_list *list, t_tree *tree);
 void	parse_redir(t_token_list *list, t_tree *tree);
+
+int	tree_check_type(t_tree_token *tree_tok, t_token_type type);
+
+#endif
