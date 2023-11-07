@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/04 14:33:57 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/04 14:36:34 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/07 14:34:56 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,26 +25,28 @@ void	token_debug(t_token_list *token_list)
 	token_list->cur = token_list->head;
 }
 
+void	execute_tree(t_tree_token *node)
+{
+	if (!node || !node->u_value.value || !node->u_value.list)
+		return ;
+	printf("%s\n", node->u_value.value);
+}
+
+void	search_tree(t_tree_token *node)
+{
+	execute_tree(node);
+	if (node->left != NULL)
+		search_tree(node->left);
+	if (node->right != NULL)
+		search_tree(node->right);
+}
+
+
 void	tree_debug(t_tree *tree)
 {
 	printf("\n======= syntax tree ============\n");
-	tree->cur = tree->first_child;
-	t_tree_token	*cur_child;
-	cur_child = tree->first_child;
-	int i = 0;
-	while (cur_child)
-	{
-		tree->cur = cur_child;
-		printf("%d child : ", ++i);
-		while (tree->cur)
-		{
-			printf("%s ", tree->cur->value);
-			tree->cur = tree->cur->next;
-		}
-		printf("\n");
-		cur_child = cur_child->child;
-	}
-	printf("\n");
+	search_tree(tree->root);
 }
+
 
 

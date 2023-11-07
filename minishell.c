@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 22:09:25 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/06 16:08:05 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/07 14:16:42 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,15 +53,15 @@ int main(int argc , char *argv[], char *envp[])
 	exit(EXIT_SUCCESS);
 }
 
-
 int	parse_execute(t_source *src, char *envp[])
 {
 	t_token_list	*token_list;
 	t_tree			*tree;
 	pid_t			pid;
-	t_pipe_info		info;
+	t_cmd_info		info;
 	int				status;
 
+	ft_memset(&info, 0, sizeof(t_cmd_info));
 	skip_white_space(src);
 	token_list = create_token_list();
 	token_list = tokenizer(token_list, src);
@@ -69,51 +69,29 @@ int	parse_execute(t_source *src, char *envp[])
 	token_debug(token_list);
 
 	tree = (t_tree *)ft_malloc(sizeof(t_tree));
-	tree->root = NULL;
-	tree->first_child = NULL;
-	tree->last_child = NULL;
+	tree->root = (t_tree_token *)ft_malloc(sizeof(t_tree_token));
+	tree->root->left = NULL;
+	tree->root->right = NULL;
 	tree = parser(token_list, tree);
 	/* tree debug */
 	tree_debug(tree);
 
-	pid = fork();
-	if (pid == -1)
-	{
-		perror("fork");
-		exit(EXIT_FAILURE);
-	}
-	if (pid == 0)
-	{
-		pipe_child(tree);
-		executor(tree, envp);
-	}
-	else
-		waitpid(0, &status, 0);
+	// pid = fork();
+	// if (pid == -1)
+	// {
+	// 	perror("fork");
+	// 	exit(EXIT_FAILURE);
+	// }
+	// if (pid == 0)
+	// {
+	// 	pipe_child(tree);
+	// 	executor(tree, envp);
+	// }
+	// else
+	// 	waitpid(0, &status, 0);
 	return 0;
 }
 
-t_tree	*parser(t_token_list *list, t_tree *tree)
-{
-	while (list->cur)
-	{
-		if (check_cur_type(list, RIGHT_REDIR) \
-		|| check_cur_type(list, LEFT_REDIR) \
-		|| check_cur_type(list, RIGHT_APPEND) \
-		|| check_cur_type(list, LEFT_APPEND))
-			parse_redir(list, tree);
-		if (check_cur_type(list, WORD))
-			parse_command(list, tree);
-		if (check_cur_type(list, PIPE))
-			parse_pipe(list, tree);
-		if (check_cur_type(list, LOGICAL_END) || check_cur_type(list, LOGICAL_OR))
-			parse_logical(list, tree);
-		if (check_cur_type(list, SINGLE_QUOTE) || check_cur_type(list, DOUBLE_QUOTE))
-			parse_quote(list, tree);
-		if (check_cur_type(list, LEFT_PAREN))
-			parse_paren(list, tree);
-	}
-	return (tree);
-}
 
 int	check_next_type(t_token_list *token_list, t_token_type type)
 {

@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/06 15:59:26 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/06 16:13:44 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/06 18:28:27 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	count_pipeline(t_tree *tree)
 	return (cnt_pipeline);
 }
 
-void	create_main_child(t_tree *tree, t_pipe_info *info)
+void	create_main_child(t_tree *tree, t_cmd_info *info)
 {
 	pid_t	main_child_pid;
 	int		pipe_cnt;
@@ -65,7 +65,24 @@ void	create_main_child(t_tree *tree, t_pipe_info *info)
 		waitpid(main_child_pid, &state, 0);
 }
 
-void	create_pipe(t_pipe_info *info)
+void	create_sub_child(t_cmd_info *info)
+{
+	int		i;
+	pid_t	pid;
+
+	i = -1;
+	while (++i < info->pipe_cnt)
+	{
+		if (i == 0)
+		{
+
+		}
+	}
+}
+
+
+
+void	create_pipe(t_cmd_info *info)
 {
 	int		i;
 

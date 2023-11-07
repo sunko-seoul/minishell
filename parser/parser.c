@@ -6,71 +6,208 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 16:32:04 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/04 14:28:41 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/07 14:35:44 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	next_sym(t_token_list *list)
+t_tree	*parser(t_token_list *list, t_tree *tree)
 {
-	if (list->cur != list->tail)
+	//printf("parser\n");
+	tree->root->left = pipeline(list);
+	tree->root->right = NULL;
+	if (list->cur && (list->cur->type == LOGICAL_END || list->cur->type == LOGICAL_OR))
 	{
-		list->before = list->cur;
 		list->cur = list->cur->next;
+		tree->root->right = pipeline(list);
+	}
+	return (tree);
+}
+
+t_tree_token	*pipeline(t_token_list *list)
+{
+	t_tree_token	*pipe_line;
+
+	//printf("pipeline_call\n");
+	if (!list->cur)
+		return (NULL);
+	pipe_line = (t_tree_token *)ft_malloc(sizeof(t_tree_token));
+	pipe_line->left = command(list);
+	pipe_line->right = NULL;
+	if (list->cur && list->cur->type == PIPE)
+	{
+		list->cur = list->cur->next;
+		pipe_line->right = pipeline(list);
+	}
+	//printf("pipeline_return\n");
+	return pipe_line;
+}
+
+t_tree_token	*command(t_token_list *list)
+{
+	t_tree_token	*cmd;
+
+	//printf("command_call\n");
+	if (!list->cur)
+		return (NULL);
+	cmd = (t_tree_token *)ft_malloc(sizeof(t_tree_token));
+	cmd->left = redirect_list(list);
+	cmd->right = simple_cmd(list);
+	if (!cmd->left)
+		cmd->left = redirect_list(list);
+	//printf("command_return\n");
+	return (cmd);
+}
+
+t_tree_token	*redirect_list(t_token_list *list)
+{
+	t_tree_token	*redir_list;
+
+	//printf("redirect_list call\n");
+	if (!list->cur)
+		return (NULL);
+	redir_list = (t_tree_token *)ft_malloc(sizeof(t_tree_token));
+	redir_list->left = redirect(list);
+	if (redir_list->left == NULL)
+		return (NULL);
+	redir_list->right = redirect_list(list);
+	//printf("redirect_list return\n");
+	return (redir_list);
+}
+
+t_tree_token	*simple_cmd(t_token_list *list)
+{
+	t_tree_token	*simple_command;
+
+	//printf("simple_cmd call\n");
+	if (!list->cur)
+		return (NULL);
+	simple_command = (t_tree_token *)ft_malloc(sizeof(t_tree_token));
+	if (is_cmd_type(list->cur, list->cur->type))
+	{
+		simple_command->left = create_value_token(cmd_file_path(list->cur->value));
+		list->cur = list->cur->next;
+		if (is_cmd_type(list->cur, list->cur->type))
+			simple_command->right = create_cmd_list_token(list, simple_command->left->u_value.value);
 	}
 	else
 	{
-		list->before = list->cur;
-		list->cur = NULL;
+		free(simple_command);
+		return (NULL);
 	}
+	//printf("simple_cmd return\n");
+	return (simple_command);
 }
 
-int	sym_accept(t_token_list *list, t_token_type type)
+t_tree_token	*redirect(t_token_list *list)
 {
+	t_tree_token	*redir;
+
+	//printf("redirect call\n");
 	if (!list->cur)
+		return (NULL);
+	redir = (t_tree_token *)ft_malloc(sizeof(t_tree_token));
+	if (is_redir_type(list->cur, list->cur->type))
+	{
+		redir->left = create_value_token(list->cur->value);
+		list->cur = list->cur->next;
+		if (list->cur->type == WORD)
+		{
+			redir->right = create_value_token(list->cur->value);
+			list->cur = list->cur->next;
+		}
+		else
+		{
+			free(redir->left);
+			free(redir);
+			syntax_error(list->cur->type);
+		}
+	}
+	else
+	{
+		free(redir);
+		return (NULL);
+	}
+	//printf("redirect return\n");
+	return (redir);
+}
+
+t_tree_token	*create_cmd_list_token(t_token_list *list, char *value)
+{
+	t_token			*tmp;
+	char			**split_cmd;
+	char			**new_list;
+	int				i;
+	int				j;
+
+	split_cmd = ft_split(value, '/');
+	i = -1;
+	j = 0;
+	while (split_cmd[++i])
+		;
+	tmp = list->cur;
+	while (is_cmd_type(tmp, tmp->type))
+	{
+		j++;
+		tmp = tmp->next;
+	}
+	new_list = (char **)ft_malloc(sizeof(char *) * (j + 2));
+	j = 0;
+	while (is_cmd_type(list->cur, list->cur->type))
+	{
+		if (j == 0)
+			new_list[j] = split_cmd[--i];
+		else
+			new_list[j] = list->cur->value;
+		list->cur = list->cur->next;
+	}
+	return (create_list_token(new_list));
+}
+
+t_tree_token	*create_value_token(char *value)
+{
+	t_tree_token	*new_token;
+
+	new_token = (t_tree_token *)ft_malloc(sizeof(t_tree_token));
+	new_token->u_value.value = value;
+	new_token->left = NULL;
+	new_token->right = NULL;
+	return (new_token);
+}
+
+t_tree_token	*create_list_token(char **list)
+{
+	t_tree_token	*new_token;
+
+	new_token = (t_tree_token *)ft_malloc(sizeof(t_tree_token));
+	new_token->u_value.list = list;
+	new_token->left = NULL;
+	new_token->right = NULL;
+	return (new_token);
+}
+
+int	is_redir_type(t_token *tok, t_token_type type)
+{
+	if (!tok)
 		return (0);
-	if (list->cur->type == type)
-	{
-		next_sym(list);
+	if (type == RIGHT_APPEND \
+	|| type == LEFT_APPEND \
+	|| type == RIGHT_REDIR \
+	|| type == LEFT_REDIR)
 		return (1);
-	}
 	return (0);
 }
 
-int	sym_expect(t_token_list *list, t_token_type type)
+int	is_cmd_type(t_token *tok, t_token_type type)
 {
-	if (sym_accept(list, type))
+	if (!tok)
+		return (0);
+	if (type == WORD \
+	|| type == SINGLE_QUOTE \
+	|| type == DOUBLE_QUOTE)
 		return (1);
-	perror("expect: unexpected symbol");
-	return (0);
+	else
+		return (0);
 }
 
-void	add_child(t_tree *tree, t_tree_token *new_tok)
-{
-	new_tok->next = NULL;
-	new_tok->child = NULL;
-	if (!tree->root)
-	{
-		tree->root = new_tok;
-		tree->first_child = new_tok;
-		tree->last_child = new_tok;
-		return ;
-	}
-	tree->last_child->child = new_tok;
-	tree->last_child = new_tok;
-}
-
-void	add_next(t_tree_token *child_tok, t_tree_token *new_tok)
-{
-	t_tree_token	*cur_tok;
-
-	if (!child_tok || !new_tok)
-		return ;
-	new_tok->next = NULL;
-	new_tok->child = NULL;
-	cur_tok = child_tok;
-	while (cur_tok->next)
-		cur_tok = cur_tok->next;
-	cur_tok->next = new_tok;
-}

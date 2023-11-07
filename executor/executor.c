@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/05 14:00:14 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/05 21:53:11 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/07 11:19:07 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,18 @@ char	**split_path(void)
 	return (rst);
 }
 
+char	*cmd_file_path(char *cmd)
+{
+	char	**path;
+	char	*path_cmd;
+
+	path = split_path();
+	if (!ft_strnstr(cmd, "bin", ft_strlen(cmd)))
+	path_cmd = join_binpath_cmd(path, cmd);
+	return (path_cmd);
+}
+
+
 void	executor(t_tree *tree, char *envp[])
 {
 	t_tree_token	*cur;
@@ -42,41 +54,6 @@ void	executor(t_tree *tree, char *envp[])
 	int				i;
 
 	path = split_path();
-	// redirection
-	// command
-	// pipe
-
-	// command
-	cur = tree->first_child;
-	cnt = 0;
-	i = -1;
-	while (cur)
-	{
-		if (cur == tree->last_child && cur->type == WORD)
-		{
-			if (!ft_strnstr(cur->value, "bin", ft_strlen(cur->value)))
-				path_cmd = join_binpath_cmd(path, cur->value);
-			else
-				path_cmd = cur->value;
-		}
-		else if (cur->type == WORD)
-			cnt++;
-		cur = cur->next;
-	}
-	cmd_arg = (char **)ft_malloc(sizeof(char *) * (cnt + 1));
-	cur = tree->last_child;
-	while (cur)
-	{
-		if (cur == tree->last_child)
-		{
-			cur = cur->next;
-			continue;
-		}
-		else
-			cmd_arg[++i] = cur->value;
-		cur = cur->next;
-	}
-	cmd_arg[++i] = NULL;
 	execve(path_cmd, cmd_arg, envp);
 }
 

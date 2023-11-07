@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/05 13:59:25 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/06 16:06:45 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/07 11:17:56 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,7 @@
 # include "../minishell.h"
 
 char	*join_binpath_cmd(char *path[], char *cmd);
+char	*cmd_file_path(char *cmd);
 void	executor(t_tree *tree, char *envp[]);
-
-typedef struct s_cmd_info
-{
-
-}	t_cmd_info;
 
 #endif
