@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 11:24:19 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/07 12:13:28 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/07 16:39:00 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ typedef struct s_tree
 typedef struct s_tree_token
 {
 	t_token_type		type;
+	int					is_list;
 	union
 	{
 		char	*value;

@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 16:32:04 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/07 14:35:44 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/07 16:49:09 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,6 @@ t_tree_token	*simple_cmd(t_token_list *list)
 {
 	t_tree_token	*simple_command;
 
-	//printf("simple_cmd call\n");
 	if (!list->cur)
 		return (NULL);
 	simple_command = (t_tree_token *)ft_malloc(sizeof(t_tree_token));
@@ -88,7 +87,7 @@ t_tree_token	*simple_cmd(t_token_list *list)
 	{
 		simple_command->left = create_value_token(cmd_file_path(list->cur->value));
 		list->cur = list->cur->next;
-		if (is_cmd_type(list->cur, list->cur->type))
+		if (list->cur && is_cmd_type(list->cur, list->cur->type))
 			simple_command->right = create_cmd_list_token(list, simple_command->left->u_value.value);
 	}
 	else
@@ -96,7 +95,6 @@ t_tree_token	*simple_cmd(t_token_list *list)
 		free(simple_command);
 		return (NULL);
 	}
-	//printf("simple_cmd return\n");
 	return (simple_command);
 }
 
@@ -147,21 +145,27 @@ t_tree_token	*create_cmd_list_token(t_token_list *list, char *value)
 	while (split_cmd[++i])
 		;
 	tmp = list->cur;
-	while (is_cmd_type(tmp, tmp->type))
+	while (tmp && is_cmd_type(tmp, tmp->type))
 	{
 		j++;
 		tmp = tmp->next;
 	}
 	new_list = (char **)ft_malloc(sizeof(char *) * (j + 2));
 	j = 0;
-	while (is_cmd_type(list->cur, list->cur->type))
+	while (list->cur && is_cmd_type(list->cur, list->cur->type))
 	{
 		if (j == 0)
+		{
 			new_list[j] = split_cmd[--i];
+			j++;
+			continue;
+		}
 		else
 			new_list[j] = list->cur->value;
+		j++;
 		list->cur = list->cur->next;
 	}
+	new_list[j] = 0;
 	return (create_list_token(new_list));
 }
 
@@ -170,6 +174,7 @@ t_tree_token	*create_value_token(char *value)
 	t_tree_token	*new_token;
 
 	new_token = (t_tree_token *)ft_malloc(sizeof(t_tree_token));
+	new_token->is_list = 0;
 	new_token->u_value.value = value;
 	new_token->left = NULL;
 	new_token->right = NULL;
@@ -181,6 +186,7 @@ t_tree_token	*create_list_token(char **list)
 	t_tree_token	*new_token;
 
 	new_token = (t_tree_token *)ft_malloc(sizeof(t_tree_token));
+	new_token->is_list = 1;
 	new_token->u_value.list = list;
 	new_token->left = NULL;
 	new_token->right = NULL;

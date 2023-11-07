@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/05 14:00:14 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/07 11:19:07 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/07 16:50:41 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,15 +46,6 @@ char	*cmd_file_path(char *cmd)
 
 void	executor(t_tree *tree, char *envp[])
 {
-	t_tree_token	*cur;
-	char			**path;
-	char			*path_cmd;
-	char			**cmd_arg;
-	int				cnt;
-	int				i;
-
-	path = split_path();
-	execve(path_cmd, cmd_arg, envp);
 }
 
 char	*join_binpath_cmd(char *path[], char *cmd)
