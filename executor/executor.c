@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/05 14:00:14 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/07 16:50:41 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/09 11:25:18 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,42 @@ char	*cmd_file_path(char *cmd)
 	return (path_cmd);
 }
 
+void	executor_value(t_tree_token *node, t_command *cmd)
+{
+	if (!node || !node->u_value.value || !node->u_value.list)
+		return ;
+	if (node->is_list == 0)
+	{
+		if (node->type == SIM_CMD)
+		{
+			//cmd_insert_value
+		}
+		else if (node->type == REDIRECT)
+		{
+
+		}
+	}
+	if (node->is_list == 1)
+	{
+
+	}
+}
+
+void	executor_traversal(t_tree_token *node, t_command *cmd)
+{
+	executor_value(node, cmd);
+	if (!node->left)
+		executor_traversal(node->left, cmd);
+	if (!node->right)
+		executor_traversal(node->right, cmd);
+}
+
 
 void	executor(t_tree *tree, char *envp[])
 {
+	t_command			cmd;
+
+	executor_traversal(tree->root, &cmd);
 }
 
 char	*join_binpath_cmd(char *path[], char *cmd)

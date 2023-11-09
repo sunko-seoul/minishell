@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 16:32:04 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/07 16:49:09 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/09 11:27:01 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ t_tree_token	*pipeline(t_token_list *list)
 	if (!list->cur)
 		return (NULL);
 	pipe_line = (t_tree_token *)ft_malloc(sizeof(t_tree_token));
+	pipe_line->type = PIPELINE;
 	pipe_line->left = command(list);
 	pipe_line->right = NULL;
 	if (list->cur && list->cur->type == PIPE)
@@ -52,6 +53,7 @@ t_tree_token	*command(t_token_list *list)
 	if (!list->cur)
 		return (NULL);
 	cmd = (t_tree_token *)ft_malloc(sizeof(t_tree_token));
+	cmd->type = CMD;
 	cmd->left = redirect_list(list);
 	cmd->right = simple_cmd(list);
 	if (!cmd->left)
@@ -68,6 +70,7 @@ t_tree_token	*redirect_list(t_token_list *list)
 	if (!list->cur)
 		return (NULL);
 	redir_list = (t_tree_token *)ft_malloc(sizeof(t_tree_token));
+	redir_list->type = REDIRECTS;
 	redir_list->left = redirect(list);
 	if (redir_list->left == NULL)
 		return (NULL);
@@ -83,6 +86,7 @@ t_tree_token	*simple_cmd(t_token_list *list)
 	if (!list->cur)
 		return (NULL);
 	simple_command = (t_tree_token *)ft_malloc(sizeof(t_tree_token));
+	simple_command->type = SIM_CMD;
 	if (is_cmd_type(list->cur, list->cur->type))
 	{
 		simple_command->left = create_value_token(cmd_file_path(list->cur->value));
@@ -106,6 +110,7 @@ t_tree_token	*redirect(t_token_list *list)
 	if (!list->cur)
 		return (NULL);
 	redir = (t_tree_token *)ft_malloc(sizeof(t_tree_token));
+	redir->type = REDIRECT;
 	if (is_redir_type(list->cur, list->cur->type))
 	{
 		redir->left = create_value_token(list->cur->value);
@@ -174,6 +179,7 @@ t_tree_token	*create_value_token(char *value)
 	t_tree_token	*new_token;
 
 	new_token = (t_tree_token *)ft_malloc(sizeof(t_tree_token));
+	// new_token->type = check_type(); check for list value type
 	new_token->is_list = 0;
 	new_token->u_value.value = value;
 	new_token->left = NULL;

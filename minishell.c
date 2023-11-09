@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 22:09:25 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/07 16:49:57 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/09 11:04:43 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,8 @@ int	parse_execute(t_source *src, char *envp[])
 	t_token_list	*token_list;
 	t_tree			*tree;
 	pid_t			pid;
-	t_cmd_info		info;
 	int				status;
 
-	ft_memset(&info, 0, sizeof(t_cmd_info));
 	skip_white_space(src);
 	token_list = create_token_list();
 	token_list = tokenizer(token_list, src);
@@ -76,19 +74,19 @@ int	parse_execute(t_source *src, char *envp[])
 	/* tree debug */
 	tree_debug(tree);
 
-	pid = fork();
-	if (pid == -1)
-	{
-		perror("fork");
-		exit(EXIT_FAILURE);
-	}
-	if (pid == 0)
-	{
-		pipe_child(tree);
-		executor(tree, envp);
-	}
-	else
-		waitpid(0, &status, 0);
+	// pid = fork();
+	// if (pid < 0)
+	// {
+	// 	perror("fork");
+	// 	exit(EXIT_FAILURE);
+	// }
+	// if (pid == 0)
+	// {
+	// 	pipe_child(tree);
+	// 	executor(tree, envp);
+	// }
+	// else
+	// 	waitpid(0, &status, 0);
 	return 0;
 }
 
