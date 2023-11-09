@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/05 14:00:14 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/09 11:25:18 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/09 15:04:40 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,10 @@ void	executor_value(t_tree_token *node, t_command *cmd)
 		}
 		else if (node->type == REDIRECT)
 		{
-
+			if (node->tok_type == LEFT_REDIR)
+				cmd->inputfile = node->u_value.value;
+			else if (node->tok_type == RIGHT_REDIR || node->tok_type == RIGHT_APPEND)
+				cmd->outfile = node->u_value.value;
 		}
 	}
 	if (node->is_list == 1)
@@ -77,7 +80,6 @@ void	executor_traversal(t_tree_token *node, t_command *cmd)
 void	executor(t_tree *tree, char *envp[])
 {
 	t_command			cmd;
-
 	executor_traversal(tree->root, &cmd);
 }
 

@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 16:32:04 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/09 11:27:01 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/09 14:58:47 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ t_tree_token	*redirect(t_token_list *list)
 	if (is_redir_type(list->cur, list->cur->type))
 	{
 		redir->left = create_value_token(list->cur->value);
+		redir->left->tok_type = list->cur->type;
 		list->cur = list->cur->next;
 		if (list->cur->type == WORD)
 		{
@@ -179,7 +180,6 @@ t_tree_token	*create_value_token(char *value)
 	t_tree_token	*new_token;
 
 	new_token = (t_tree_token *)ft_malloc(sizeof(t_tree_token));
-	// new_token->type = check_type(); check for list value type
 	new_token->is_list = 0;
 	new_token->u_value.value = value;
 	new_token->left = NULL;

@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 11:24:19 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/09 11:26:13 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/09 15:00:07 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,25 +18,12 @@
 
 typedef enum e_tree_type
 {
+	NON,
 	PIPELINE,
 	CMD,
 	SIM_CMD,
 	REDIRECTS,
-	REDIRECT, // tree node type
-	LOGICAL_END,
-	LOGICAL_OR,
-	WILDCARD,
-	SINGLE_QUOTE,
-	DOUBLE_QUOTE,
-	PIPE,
-	LEFT_PAREN,
-	RIGHT_PAREN,
-	RIGHT_REDIR,
-	LEFT_REDIR,
-	RIGHT_APPEND,
-	LEFT_APPEND,
-	DOLLAR_SIGN,
-	WORD // tree and list value type
+	REDIRECT
 }	t_tree_type;
 
 typedef struct s_tree
@@ -48,6 +35,7 @@ typedef struct s_tree
 typedef struct s_tree_token
 {
 	t_tree_type			type;
+	t_token_type		tok_type;
 	int					is_list;
 	union
 	{
