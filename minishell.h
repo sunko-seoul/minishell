@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 22:11:19 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/06 16:05:41 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/10 00:07:26 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@
 # include "token/token.h"
 # include "util/util.h"
 # include "executor/executor.h"
-# include "executor/pipeline.h"
 
 
 # if defined (SUNKO_PC)

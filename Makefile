@@ -9,6 +9,9 @@ SRCS = signal/signal.c\
 	   terminal/terminal.c\
 	   error/error.c\
 	   executor/executor.c\
+	   executor/command.c\
+	   executor/executor_util.c\
+	   executor/simple_command.c\
 	   parser/parser.c\
 	   parser/parser_token.c\
 	   token/source.c\

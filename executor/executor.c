@@ -6,65 +6,47 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/05 14:00:14 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/09 15:04:40 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/10 00:08:58 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 
-char	**split_path(void)
-{
-	char	*path;
-	char	**rst;
-
-	path = getenv("PATH");
-	if (!path)
-	{
-		printf("goto set path\n");
-		exit(1);
-	}
-	rst = ft_split(path, ':');
-	if (!rst)
-	{
-		printf("malloc error\n");
-		exit(1);
-	}
-	return (rst);
-}
-
-char	*cmd_file_path(char *cmd)
-{
-	char	**path;
-	char	*path_cmd;
-
-	path = split_path();
-	if (!ft_strnstr(cmd, "bin", ft_strlen(cmd)))
-	path_cmd = join_binpath_cmd(path, cmd);
-	return (path_cmd);
-}
-
 void	executor_value(t_tree_token *node, t_command *cmd)
 {
+	t_simple_command	*sim_cmd;
+	int					i;
+
 	if (!node || !node->u_value.value || !node->u_value.list)
 		return ;
 	if (node->is_list == 0)
 	{
-		if (node->type == SIM_CMD)
+		if (node->type == CMD)
 		{
-			//cmd_insert_value
+			sim_cmd = create_simple_cmd();
+			insert_simple_cmd(cmd, sim_cmd);
 		}
+		else if (node->type == SIM_CMD)
+			insert_argument(cmd->simple_commands[cmd->idx], node->u_value.value);
 		else if (node->type == REDIRECT)
 		{
-			if (node->tok_type == LEFT_REDIR)
-				cmd->inputfile = node->u_value.value;
+			if (node->tok_type == LEFT_REDIR || node->tok_type == LEFT_APPEND)
+				cmd->simple_commands[cmd->idx]->inputfile = node->u_value.value;
 			else if (node->tok_type == RIGHT_REDIR || node->tok_type == RIGHT_APPEND)
-				cmd->outfile = node->u_value.value;
+				cmd->simple_commands[cmd->idx]->outfile = node->u_value.value;
 		}
 	}
 	if (node->is_list == 1)
-	{
+		insert_list_argument(node, cmd);
+}
 
-	}
+void	insert_list_argument(t_tree_token *node, t_command *cmd)
+{
+	int		i;
+
+	i = -1;
+	while (node->u_value.list[++i])
+		insert_argument(cmd->simple_commands[cmd->idx], node->u_value.list[i]);
 }
 
 void	executor_traversal(t_tree_token *node, t_command *cmd)
@@ -76,40 +58,11 @@ void	executor_traversal(t_tree_token *node, t_command *cmd)
 		executor_traversal(node->right, cmd);
 }
 
-
 void	executor(t_tree *tree, char *envp[])
 {
 	t_command			cmd;
+
+	init_struct_cmd(&cmd);
 	executor_traversal(tree->root, &cmd);
 }
 
-char	*join_binpath_cmd(char *path[], char *cmd)
-{
-	char	*cmd_path;
-	char	*absolute_path;
-	int		i;
-
-	i = -1;
-	while (path[++i])
-	{
-		cmd_path = ft_strjoin(path[i], "/");
-		if (!cmd_path)
-		{
-			printf("malloc error\n");
-			exit(1);
-		}
-		absolute_path = ft_strjoin(cmd_path, cmd);
-		if (!absolute_path)
-		{
-			printf("malloc error\n");
-			exit(1);
-		}
-		free(cmd_path);
-		if (!access(absolute_path, F_OK))
-			break ;
-		free(absolute_path);
-	}
-	if (!path[i])
-		printf("not found command %s\n", cmd);
-	return (absolute_path);
-}

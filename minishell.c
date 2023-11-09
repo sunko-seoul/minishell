@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 22:09:25 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/09 11:04:43 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/10 00:13:22 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,20 +73,7 @@ int	parse_execute(t_source *src, char *envp[])
 	tree = parser(token_list, tree);
 	/* tree debug */
 	tree_debug(tree);
-
-	// pid = fork();
-	// if (pid < 0)
-	// {
-	// 	perror("fork");
-	// 	exit(EXIT_FAILURE);
-	// }
-	// if (pid == 0)
-	// {
-	// 	pipe_child(tree);
-	// 	executor(tree, envp);
-	// }
-	// else
-	// 	waitpid(0, &status, 0);
+	executor(tree, envp);
 	return 0;
 }
 
