@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 23:34:19 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/09 22:21:38 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/11 15:35:03 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 
 typedef enum e_token_list
 {
+	NON,
 	LOGICAL_END,
 	LOGICAL_OR,
 	WILDCARD,

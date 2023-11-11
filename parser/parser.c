@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 16:32:04 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/09 14:58:47 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/11 15:39:58 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 t_tree	*parser(t_token_list *list, t_tree *tree)
 {
-	//printf("parser\n");
 	tree->root->left = pipeline(list);
 	tree->root->right = NULL;
 	if (list->cur && (list->cur->type == LOGICAL_END || list->cur->type == LOGICAL_OR))
@@ -29,7 +28,6 @@ t_tree_token	*pipeline(t_token_list *list)
 {
 	t_tree_token	*pipe_line;
 
-	//printf("pipeline_call\n");
 	if (!list->cur)
 		return (NULL);
 	pipe_line = (t_tree_token *)ft_malloc(sizeof(t_tree_token));
@@ -41,7 +39,6 @@ t_tree_token	*pipeline(t_token_list *list)
 		list->cur = list->cur->next;
 		pipe_line->right = pipeline(list);
 	}
-	//printf("pipeline_return\n");
 	return pipe_line;
 }
 
@@ -66,7 +63,6 @@ t_tree_token	*redirect_list(t_token_list *list)
 {
 	t_tree_token	*redir_list;
 
-	//printf("redirect_list call\n");
 	if (!list->cur)
 		return (NULL);
 	redir_list = (t_tree_token *)ft_malloc(sizeof(t_tree_token));
@@ -75,7 +71,6 @@ t_tree_token	*redirect_list(t_token_list *list)
 	if (redir_list->left == NULL)
 		return (NULL);
 	redir_list->right = redirect_list(list);
-	//printf("redirect_list return\n");
 	return (redir_list);
 }
 
@@ -90,9 +85,14 @@ t_tree_token	*simple_cmd(t_token_list *list)
 	if (is_cmd_type(list->cur, list->cur->type))
 	{
 		simple_command->left = create_value_token(cmd_file_path(list->cur->value));
+		simple_command->left->type = CMD_VALUE;
+		simple_command->left->tok_type  = list->cur->type;
 		list->cur = list->cur->next;
 		if (list->cur && is_cmd_type(list->cur, list->cur->type))
+		{
 			simple_command->right = create_cmd_list_token(list, simple_command->left->u_value.value);
+			simple_command->right->type = SIM_CMD;
+		}
 	}
 	else
 	{
@@ -106,7 +106,6 @@ t_tree_token	*redirect(t_token_list *list)
 {
 	t_tree_token	*redir;
 
-	//printf("redirect call\n");
 	if (!list->cur)
 		return (NULL);
 	redir = (t_tree_token *)ft_malloc(sizeof(t_tree_token));
@@ -119,6 +118,7 @@ t_tree_token	*redirect(t_token_list *list)
 		if (list->cur->type == WORD)
 		{
 			redir->right = create_value_token(list->cur->value);
+			redir->right->tok_type = list->cur->type;
 			list->cur = list->cur->next;
 		}
 		else
@@ -133,7 +133,6 @@ t_tree_token	*redirect(t_token_list *list)
 		free(redir);
 		return (NULL);
 	}
-	//printf("redirect return\n");
 	return (redir);
 }
 
@@ -196,6 +195,7 @@ t_tree_token	*create_list_token(char **list)
 	new_token->u_value.list = list;
 	new_token->left = NULL;
 	new_token->right = NULL;
+	new_token->tok_type = WORD;
 	return (new_token);
 }
 

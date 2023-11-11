@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: hyunjoo <hyunjoo@student.42seoul.k>        +#+  +:+       +#+         #
+#    By: sunko <sunko@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/13 19:02:14 by hyunjoo           #+#    #+#              #
-#    Updated: 2023/03/15 01:55:08 by hyunjoo          ###   ########.fr        #
+#    Updated: 2023/11/11 15:31:37 by sunko            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -65,7 +65,7 @@ else
 endif
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 
 AR = ar
 ARFLAGS = -rcs

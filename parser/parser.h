@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 11:24:19 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/09 22:21:21 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/11 15:38:20 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,14 @@
 
 typedef enum e_tree_type
 {
+	NON_,
 	PIPELINE,
 	CMD,
 	SIM_CMD,
 	REDIRECTS,
-	REDIRECT
+	REDIRECT,
+	CMD_VALUE,
+	REDIR_VALUE
 }	t_tree_type;
 
 typedef struct s_tree

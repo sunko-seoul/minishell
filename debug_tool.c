@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/04 14:33:57 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/07 16:45:41 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/11 15:50:12 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,17 @@ void	token_debug(t_token_list *token_list)
 
 void	execute_tree(t_tree_token *node)
 {
-	if (!node || !node->u_value.value || !node->u_value.list)
+	if (!node || (!node->u_value.value && !node->u_value.list))
 		return ;
 	if (node->is_list == 0)
+	{
+		printf("type = %d value = ", node->tok_type);
 		printf("%s\n", node->u_value.value);
+	}
 	if (node->is_list == 1)
 	{
 		int i = 0;
+		printf("type = %d value = ", node->tok_type);
 		while (node->u_value.list[i])
 		{
 			printf("%s ", node->u_value.list[i]);
@@ -52,13 +56,9 @@ void	search_tree(t_tree_token *node)
 		search_tree(node->right);
 }
 
-
 void	tree_debug(t_tree *tree)
 {
 	printf("\n======= syntax tree ============\n");
 	search_tree(tree->root);
 	printf("\n");
 }
-
-
-
