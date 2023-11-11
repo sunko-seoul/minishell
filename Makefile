@@ -12,6 +12,8 @@ SRCS = signal/signal.c\
 	   executor/command.c\
 	   executor/executor_util.c\
 	   executor/simple_command.c\
+	   executor/fd.c\
+	   executor/close_fd.c\
 	   parser/parser.c\
 	   parser/parser_token.c\
 	   token/source.c\

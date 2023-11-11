@@ -1,0 +1,17 @@
+Makefile
+README.md
+debug_tool.c
+debug_tool.o
+error
+executor
+libft
+minishell
+minishell.c
+minishell.h
+minishell.o
+outfile
+parser
+signal
+terminal
+token
+util

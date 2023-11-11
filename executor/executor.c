@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/05 14:00:14 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/11 21:25:38 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/11 23:40:17 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,21 +78,71 @@ void	command_debug(t_tree *tree, t_command cmd)
 
 void	execute(t_command *cmd, char **envp)
 {
+	pid_t	main_pid;
+	pid_t	sub_pid;
 	int		i;
-	int		tmp_in;
-	int		tmp_out;
-	int		fd_in;
-	int		fd_out;
-	int		fd_pipe[2];
-	pid_t	pid;
 
 	i = -1;
-	while (++i < cmd->num_of_simple_cmd)
+	main_pid = fork();
+	if (main_pid == 0)
 	{
-
+		while (++i < cmd->num_of_simple_cmd - 1)
+		{
+			sub_pid = fork();
+			if (sub_pid == 0)
+			{
+				execve(cmd->simple_commands[i]->args[0], &(cmd->simple_commands[i]->args[1]), envp);
+				perror("execve");
+				exit(EXIT_FAILURE);
+			}
+		}
+		execve(cmd->simple_commands[i]->args[0], &(cmd->simple_commands[i]->args[1]), envp);
+		perror("execve");
+		exit(EXIT_FAILURE);
 	}
-	waitpid(0, NULL, 0);
+	else if (main_pid > 0)
+		waitpid(main_pid, NULL, 0);
 }
+
+void	create_sub_child(t_command *cmd, char *envp[])
+{
+	int					i;
+	pid_t				pid;
+	t_simple_command	*s_cmd;
+
+	i = -1;
+	while (++i < cmd->num_of_simple_cmd - 1)
+	{
+		s_cmd = cmd->simple_commands[i];
+		pid = fork();
+		if (pid == 0)
+		{
+			close_not_use_fd(cmd, i);
+			execve(s_cmd->args[0], &(s_cmd->args[1]), envp);
+		}
+	}
+	s_cmd = cmd->simple_commands[i];
+	close_not_use_fd(cmd, i);
+	execve(s_cmd->args[0], &(s_cmd->args[1]), envp);
+}
+
+void	create_main_child(t_command *cmd, char *envp[])
+{
+	pid_t	pid;
+	int		main_child_status;
+
+	pid = fork();
+	if (pid < 0)
+		perror("fork");
+	else if (pid == 0)
+	{
+		create_fd_pipe(cmd);
+		create_sub_child(cmd, envp);
+	}
+	else
+		waitpid(pid, &main_child_status, 0);
+}
+
 
 void	executor(t_tree *tree, char *envp[])
 {
@@ -102,8 +152,7 @@ void	executor(t_tree *tree, char *envp[])
 	executor_traversal(tree->root, &cmd);
 	command_debug(tree, cmd);
 	printf("\n================= execute ==================\n");
-	create_fd_pipe(&cmd);
-	set_io_fd(&cmd);
+	create_main_child(&cmd, envp);
 	execute(&cmd, envp);
 }
 

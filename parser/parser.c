@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 16:32:04 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/11 15:39:58 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/11 22:38:36 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,14 @@ t_tree_token	*simple_cmd(t_token_list *list)
 		if (list->cur && is_cmd_type(list->cur, list->cur->type))
 		{
 			simple_command->right = create_cmd_list_token(list, simple_command->left->u_value.value);
-			simple_command->right->type = SIM_CMD;
+			simple_command->right->tok_type  = list->cur->type;
+			simple_command->right->type = CMD_VALUE;
+		}
+		else
+		{
+			simple_command->right = create_value_token(cmd_file_path(list->before->value));
+			simple_command->right->tok_type  = list->before->type;
+			simple_command->right->type = CMD_VALUE;
 		}
 	}
 	else
@@ -141,14 +148,9 @@ t_tree_token	*create_cmd_list_token(t_token_list *list, char *value)
 	t_token			*tmp;
 	char			**split_cmd;
 	char			**new_list;
-	int				i;
 	int				j;
 
-	split_cmd = ft_split(value, '/');
-	i = -1;
 	j = 0;
-	while (split_cmd[++i])
-		;
 	tmp = list->cur;
 	while (tmp && is_cmd_type(tmp, tmp->type))
 	{
@@ -161,7 +163,7 @@ t_tree_token	*create_cmd_list_token(t_token_list *list, char *value)
 	{
 		if (j == 0)
 		{
-			new_list[j] = split_cmd[--i];
+			new_list[j] = value;
 			j++;
 			continue;
 		}

@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/05 13:59:25 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/11 21:24:27 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/11 23:39:16 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,5 +58,10 @@ void				insert_list_argument(t_tree_token *node, t_command *cmd);
 /* fd.c */
 void				change_fd(int old_fd, int new_fd);
 void				create_fd_pipe(t_command *cmd);
+
+/* close_fd.c */
+void			close_input_fd(t_command *cmd, int idx);
+void			close_output_fd(t_command *cmd, int idx);
+void			close_not_use_fd(t_command *cmd, int idx);
 
 #endif
