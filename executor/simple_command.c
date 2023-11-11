@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 10:22:34 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/09 23:35:51 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/11 21:36:17 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ t_simple_command	*create_simple_cmd(void)
 
 	sim_cmd = (t_simple_command *)ft_malloc(sizeof(t_simple_command));
 	sim_cmd->max_available_arg = 20;
+	sim_cmd->fd_in = 0;
+	sim_cmd->fd_out = 1;
 	sim_cmd->num_of_arg = 0;
 	sim_cmd->args = (char **)\
 	ft_malloc(sizeof(char *) * sim_cmd->max_available_arg);

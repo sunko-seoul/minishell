@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/05 14:00:14 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/11 17:01:54 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/11 21:25:38 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,46 +86,11 @@ void	execute(t_command *cmd, char **envp)
 	int		fd_pipe[2];
 	pid_t	pid;
 
-	i = 0;
-	tmp_in = dup(0);
-	tmp_out = dup(1);
-	while (i < cmd->num_of_simple_cmd)
+	i = -1;
+	while (++i < cmd->num_of_simple_cmd)
 	{
-		if (cmd->simple_commands[i]->inputfile)
-			fd_in = open(cmd->simple_commands[i]->inputfile, O_RDONLY, 0644);
-		else
-			fd_in = dup(tmp_in);
-		dup2(fd_in, 0);
-		close(fd_in);
-		if (i == cmd->num_of_simple_cmd - 1)
-		{
-			if (cmd->simple_commands[i]->outfile)
-				fd_out = open(cmd->simple_commands[i]->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			else
-				fd_out = dup(tmp_out);
-		}
-		else
-		{
-			pipe(fd_pipe);
-			fd_out = fd_pipe[1];
-			fd_in = fd_pipe[0];
-		}
-		dup2(fd_out, 1);
-		close(fd_out);
-		pid = fork();
-		if (pid == 0)
-		{
-			execve(cmd->simple_commands[i]->args[0], &(cmd->simple_commands[i]->args[1]), envp);
-			perror("execve");
-			exit(EXIT_FAILURE);
-		}
-		dup2(tmp_in, 0);
-		dup2(tmp_out, 1);
-		close(tmp_in);
-		close(tmp_out);
-		i++;
+
 	}
-	i = 0;
 	waitpid(0, NULL, 0);
 }
 
@@ -137,6 +102,8 @@ void	executor(t_tree *tree, char *envp[])
 	executor_traversal(tree->root, &cmd);
 	command_debug(tree, cmd);
 	printf("\n================= execute ==================\n");
+	create_fd_pipe(&cmd);
+	set_io_fd(&cmd);
 	execute(&cmd, envp);
 }
 

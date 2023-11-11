@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/05 13:59:25 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/10 00:11:45 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/11 21:24:27 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ typedef struct s_simple_command
 {
 	int		max_available_arg;
 	int		num_of_arg;
+	int		fd_in;
+	int		fd_out;
 	char	*outfile;
 	char	*inputfile;
 	char	**args;
@@ -29,6 +31,7 @@ typedef struct s_command
 	int					max_available_simple_cmd;
 	int					num_of_simple_cmd;
 	int					idx;
+	int					**fd_pipe;
 	t_simple_command	**simple_commands;
 }	t_command;
 
@@ -51,5 +54,9 @@ void				insert_simple_cmd(t_command *cmd, t_simple_command *simple_cmd);
 /* command.c */
 void				init_struct_cmd(t_command *cmd);
 void				insert_list_argument(t_tree_token *node, t_command *cmd);
+
+/* fd.c */
+void				change_fd(int old_fd, int new_fd);
+void				create_fd_pipe(t_command *cmd);
 
 #endif
