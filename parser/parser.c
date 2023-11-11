@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 16:32:04 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/11 22:38:36 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/11 23:42:37 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ t_tree_token	*simple_cmd(t_token_list *list)
 		if (list->cur && is_cmd_type(list->cur, list->cur->type))
 		{
 			simple_command->right = create_cmd_list_token(list, simple_command->left->u_value.value);
-			simple_command->right->tok_type  = list->cur->type;
+			//simple_command->right->tok_type  = list->cur->type;
 			simple_command->right->type = CMD_VALUE;
 		}
 		else
