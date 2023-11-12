@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/05 13:59:25 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/11 23:39:16 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/12 14:12:21 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ typedef struct s_simple_command
 	int		fd_in;
 	int		fd_out;
 	char	*outfile;
-	char	*inputfile;
+	char	*infile;
 	char	**args;
 }	t_simple_command;
 

@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/05 14:00:14 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/12 12:37:15 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/12 14:18:59 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	executor_value(t_tree_token *node, t_command *cmd)
 		if (node->type == REDIRECT)
 		{
 			if (node->left->tok_type == LEFT_REDIR || node->left->tok_type == LEFT_APPEND)
-				cmd->simple_commands[cmd->idx]->inputfile = node->right->u_value.value;
+				cmd->simple_commands[cmd->idx]->infile = node->right->u_value.value;
 			else if (node->left->tok_type == RIGHT_REDIR || node->left->tok_type == RIGHT_APPEND)
 				cmd->simple_commands[cmd->idx]->outfile = node->right->u_value.value;
 		}
@@ -67,7 +67,7 @@ void	command_debug(t_tree *tree, t_command cmd)
 	for (int i = 0; i < cmd.num_of_simple_cmd; ++i)
 	{
 		printf("%d simple command = ", i + 1);
-		printf("(infile = %s), ", cmd.simple_commands[i]->inputfile);
+		printf("(infile = %s), ", cmd.simple_commands[i]->infile);
 		printf("(outfile = %s), ", cmd.simple_commands[i]->outfile);
 		printf("(argument = ");
 		for (int j = 0; j < cmd.simple_commands[i]->num_of_arg; ++j)
@@ -76,37 +76,6 @@ void	command_debug(t_tree *tree, t_command cmd)
 	}
 }
 
-void	execute(t_command *cmd, char **envp)
-{
-	pid_t	main_pid;
-	pid_t	sub_pid;
-	int		state;
-	int		i;
-
-	i = -1;
-	main_pid = fork();
-	if (main_pid == 0)
-	{
-		while (++i < cmd->num_of_simple_cmd - 1)
-		{
-			sub_pid = fork();
-			if (sub_pid == 0)
-			{
-				execve(cmd->simple_commands[i]->args[0], &(cmd->simple_commands[i]->args[1]), envp);
-				perror("execve");
-				exit(EXIT_FAILURE);
-			}
-		}
-		execve(cmd->simple_commands[i]->args[0], &(cmd->simple_commands[i]->args[1]), envp);
-		perror("execve");
-		exit(EXIT_FAILURE);
-	}
-	else if (main_pid > 0)
-	{
-		waitpid(main_pid, &state, 0);
-		exit(state >> 8);
-	}
-}
 
 void	create_sub_child(t_command *cmd, char *envp[])
 {
@@ -146,7 +115,6 @@ void	create_main_child(t_command *cmd, char *envp[])
 	else
 	{
 		waitpid(pid, &main_child_status, 0);
-		printf("mainchild state = %d\n", main_child_status >> 8);
 	}
 }
 
@@ -160,6 +128,5 @@ void	executor(t_tree *tree, char *envp[])
 	command_debug(tree, cmd);
 	printf("\n================= execute ==================\n");
 	create_main_child(&cmd, envp);
-	//execute(&cmd, envp);
 }
 
