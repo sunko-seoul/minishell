@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 21:18:41 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/11 23:39:06 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/12 12:51:17 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ void	create_fd_pipe(t_command *cmd)
 	int	i;
 
 	i = -1;
-	cmd->fd_pipe = (int **)ft_malloc(sizeof(int *) * cmd->num_of_simple_cmd);
-	while (++i < cmd->num_of_simple_cmd)
+	cmd->fd_pipe = (int **)ft_malloc(sizeof(int *) * (cmd->num_of_simple_cmd - 1));
+	while (++i < cmd->num_of_simple_cmd - 1)
 	{
 		cmd->fd_pipe[i] = (int *)ft_malloc(sizeof(int) * 2);
 		pipe(cmd->fd_pipe[i]);

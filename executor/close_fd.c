@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 23:06:51 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/11 23:38:46 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/12 12:59:51 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	close_input_fd(t_command *cmd, int idx)
 	t_simple_command	*s_cmd;
 
 	i = 0;
+	printf("\nclose_input_fd call (%d)\n", idx);
 	s_cmd = cmd->simple_commands[idx];
 	if (idx == 0)
 	{
@@ -39,10 +40,15 @@ void	close_input_fd(t_command *cmd, int idx)
 				close(s_cmd->fd_in);
 			}
 			else
+			{
+				printf("(%d) dup pipe[%d][0] -> 0\n", idx, idx - 1);
 				dup2(cmd->fd_pipe[idx - 1][0], 0);
+			}
 		}
+		printf("(%d) close pipe[%d][0]\n", idx, i - 1);
 		close(cmd->fd_pipe[i - 1][0]);
 	}
+	printf("close_input_fd return (%d)\n", idx);
 }
 
 void	close_output_fd(t_command *cmd, int idx)
@@ -51,6 +57,7 @@ void	close_output_fd(t_command *cmd, int idx)
 	t_simple_command	*s_cmd;
 
 	i = -1;
+	printf("\nclose_output_fd call (%d)\n", idx);
 	s_cmd = cmd->simple_commands[idx];
 	if (idx == cmd->num_of_simple_cmd - 1)
 	{
@@ -61,7 +68,7 @@ void	close_output_fd(t_command *cmd, int idx)
 			close(s_cmd->fd_out);
 		}
 	}
-	while (++i < cmd->num_of_simple_cmd)
+	while (++i < cmd->num_of_simple_cmd - 1)
 	{
 		if (idx == i)
 		{
@@ -72,10 +79,15 @@ void	close_output_fd(t_command *cmd, int idx)
 				close(s_cmd->fd_out);
 			}
 			else
+			{
+				printf("(%d) dup pipe[%d][1] -> 1\n", idx, i);
 				dup2(cmd->fd_pipe[i][1], 1);
+			}
 		}
+		printf("(%d) close pipe[%d][1]\n", idx, i);
 		close(cmd->fd_pipe[i][1]);
 	}
+	printf("close_output_fd return (%d)\n", idx);
 }
 
 

@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/05 14:00:14 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/11 23:40:17 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/12 12:37:15 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ void	execute(t_command *cmd, char **envp)
 {
 	pid_t	main_pid;
 	pid_t	sub_pid;
+	int		state;
 	int		i;
 
 	i = -1;
@@ -101,7 +102,10 @@ void	execute(t_command *cmd, char **envp)
 		exit(EXIT_FAILURE);
 	}
 	else if (main_pid > 0)
-		waitpid(main_pid, NULL, 0);
+	{
+		waitpid(main_pid, &state, 0);
+		exit(state >> 8);
+	}
 }
 
 void	create_sub_child(t_command *cmd, char *envp[])
@@ -140,7 +144,10 @@ void	create_main_child(t_command *cmd, char *envp[])
 		create_sub_child(cmd, envp);
 	}
 	else
+	{
 		waitpid(pid, &main_child_status, 0);
+		printf("mainchild state = %d\n", main_child_status >> 8);
+	}
 }
 
 
@@ -153,6 +160,6 @@ void	executor(t_tree *tree, char *envp[])
 	command_debug(tree, cmd);
 	printf("\n================= execute ==================\n");
 	create_main_child(&cmd, envp);
-	execute(&cmd, envp);
+	//execute(&cmd, envp);
 }
 
