@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 22:09:25 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/10 00:13:22 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/13 00:46:23 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,14 +65,13 @@ int	parse_execute(t_source *src, char *envp[])
 	token_list = tokenizer(token_list, src);
 	/* token debug */
 	token_debug(token_list);
-
 	tree = (t_tree *)ft_malloc(sizeof(t_tree));
 	tree->root = (t_tree_token *)ft_malloc(sizeof(t_tree_token));
 	tree->root->left = NULL;
 	tree->root->right = NULL;
 	tree = parser(token_list, tree);
 	/* tree debug */
-	tree_debug(tree);
+	//tree_debug(tree);
 	executor(tree, envp);
 	return 0;
 }
@@ -141,4 +140,3 @@ void	syntax_error(t_token_type type)
 	write(2, "\'\n", 2);
 	exit(EXIT_FAILURE);
 }
-
