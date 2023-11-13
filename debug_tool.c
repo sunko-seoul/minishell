@@ -6,11 +6,35 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/04 14:33:57 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/11 15:50:12 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/13 23:08:35 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	dump_local_symtab(t_symtab_stack *sym_stack)
+{
+	t_symtab	*symtab;
+	int			i;
+	int			indent;
+
+	symtab = sym_stack->local_symtab;
+	i = 0;
+	indent = symtab->level * 4;
+
+	printf("%*sSymbol table [Level %d]:\r\n", indent, " ", symtab->level);
+	printf("%*s===========================\r\n", indent, " ");
+	printf("%*s  No               Symbol                    Val\r\n", indent, " ");
+	printf("%*s------ -------------------------------- ------------\r\n", indent, " ");
+
+	t_symtab_entry	*entry = symtab->first;
+	while (entry)
+	{
+		printf("%*s[%04d] %-32s '%s'\r\n", indent, " ", i++, entry->name, entry->val);
+		entry = entry->next;
+	}
+	printf("%*s------ -------------------------------- ------------\r\n", indent, " ");
+}
 
 void	token_debug(t_token_list *token_list)
 {

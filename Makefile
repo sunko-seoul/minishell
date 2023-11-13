@@ -23,6 +23,8 @@ SRCS = signal/signal.c\
 	   util/get_shell_name.c\
 	   util/ft_malloc.c\
 	   debug_tool.c\
+	   symtab/symtab_util.c\
+	   symtab/symtab.c\
 	   minishell.c
 OBJS = $(SRCS:.c=.o)
 HEADER = minishell.h

@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 22:09:25 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/13 00:46:23 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/13 23:20:36 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,22 @@ int		check_next_type(t_token_list *token_list, t_token_type type);
 int		check_cur_type(t_token_list *token_list, t_token_type type);
 char	*type_to_string(t_token_type type);
 void	syntax_error(t_token_type type);
+void	dump_local_symtab(t_symtab_stack *sym_stack);
 
 
 int main(int argc , char *argv[], char *envp[])
 {
-	char		*command;
-	t_termios	origin_attr;
-	t_source	src;
+	char			*command;
+	t_symtab_stack	symtab_stack;
+	t_termios		origin_attr;
+	t_source		src;
 	(void)argc;
 	(void)argv;
 
 	if (argc != 1)
 		arg_error();
+	initsh(&symtab_stack, envp);
+	dump_local_symtab(&symtab_stack); // symtable debug tool
 	disable_ctrl_c_output(&origin_attr);
 	call_signal();
 	while (1)

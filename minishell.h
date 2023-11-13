@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 22:11:19 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/11 15:49:41 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/13 23:19:24 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@
 # include "token/token.h"
 # include "util/util.h"
 # include "executor/executor.h"
+# include "symtab/symtab.h"
 
 
 # if defined (SUNKO_PC)
@@ -58,7 +59,7 @@ int		check_next_type(t_token_list *token_list, t_token_type type);
 int		check_cur_type(t_token_list *token_list, t_token_type type);
 char	*type_to_string(t_token_type type);
 
-
+/* debug tool */
 int		parse_execute(t_source *src, char *envp[]);
 void	token_debug(t_token_list *token_list);
 void	tree_debug(t_tree *tree);
