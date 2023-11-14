@@ -6,11 +6,18 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/05 14:00:14 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/12 14:18:59 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/14 11:04:16 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
+
+int	builtin_echo(int argc, char *argv[]);
+int	builtin_cd(int argc, char *argv[]);
+int	builtin_pwd(int argc, char *argv[]);
+int	builtin_export(int argc, char *argv[]);
+int	builtin_unset(int argc, char *argv[]);
+int	builtin_exit(int argc, char *argv[]);
 
 void	executor_value(t_tree_token *node, t_command *cmd)
 {
@@ -118,12 +125,25 @@ void	create_main_child(t_command *cmd, char *envp[])
 	}
 }
 
+void	init_builtins(t_builtin *builtins)
+{
+	builtins[0].name = "echo";
+	builtins[1].name = "cd";
+	builtins[2].name = "pwd";
+	builtins[3].name = "export";
+	builtins[4].name = "unset";
+	builtins[5].name = "env";
+	builtins[6].name = "exit";
+}
+
 
 void	executor(t_tree *tree, char *envp[])
 {
 	t_command			cmd;
+	t_builtin			builtins[7];
 
 	init_struct_cmd(&cmd);
+	init_builtins(&builtins);
 	executor_traversal(tree->root, &cmd);
 	command_debug(tree, cmd);
 	printf("\n================= execute ==================\n");

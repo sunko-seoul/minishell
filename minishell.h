@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 22:11:19 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/13 23:19:24 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/14 10:48:08 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@
 # include "util/util.h"
 # include "executor/executor.h"
 # include "symtab/symtab.h"
+# include "builtins/builtins.h"
 
 
 # if defined (SUNKO_PC)
