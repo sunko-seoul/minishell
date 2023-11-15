@@ -6,7 +6,7 @@
 /*   By: sunko <sunko@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 16:32:04 by sunko             #+#    #+#             */
-/*   Updated: 2023/11/15 01:17:59 by sunko            ###   ########.fr       */
+/*   Updated: 2023/11/15 14:32:17 by sunko            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ t_tree_token	*command(t_token_list *list)
 	return (cmd);
 }
 
+
 t_tree_token	*redirect_list(t_token_list *list)
 {
 	t_tree_token	*redir_list;
@@ -73,6 +74,8 @@ t_tree_token	*redirect_list(t_token_list *list)
 	redir_list->right = redirect_list(list);
 	return (redir_list);
 }
+
+
 
 t_tree_token	*simple_cmd(t_token_list *list)
 {
